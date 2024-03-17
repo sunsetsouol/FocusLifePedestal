@@ -1,0 +1,50 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+spring:
+  security:
+    enabled: true
+  mvc:
+    validation:
+      enabled: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://39.98.41.126:3306/pedestal?useSSL=false&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_QGPASSWORD}
+  redis:
+    host: 39.98.41.126
+    port: 6379
+    password: ${REDIS_PASSWORD}
+    lettuce:
+      pool:
+        max-active: 12
+        max-idle: 11
+        time-between-eviction-runs: 10s
+      shutdown-timeout: 0
+    database: 1
+  mail:
+    host: smtp.qq.com
+    username: 2824687171@qq.com
+    password: wfwiwtwpqdjsdcfi
+    default-encoding: UTF-8
+
+logging:
+  level:
+    org:
+      springframework:
+        boot:
+          autoconfigure: ERROR
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
