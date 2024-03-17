@@ -1,13 +1,14 @@
 package com.qgStudio.pedestal.service.impl;
 
+import com.qgStudio.pedestal.constant.RedisConstants;
 import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
 import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
 import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.mapper.FocusOnTemplateMapper;
 import com.qgStudio.pedestal.service.IFocusOnTemplateService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.qgStudio.pedestal.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +22,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class FocusOnTemplateServiceImpl extends ServiceImpl<FocusOnTemplateMapper, FocusOnTemplate> implements IFocusOnTemplateService {
-    private final RedisCache redisCache;
+    private final StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    public FocusOnTemplateServiceImpl(RedisCache redisCache) {
-        this.redisCache = redisCache;
+    public FocusOnTemplateServiceImpl(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
     }
+
 
     @Override
     public Result addTemplate(FocusOnTemplate focusOnTemplate) {
@@ -34,9 +36,8 @@ public class FocusOnTemplateServiceImpl extends ServiceImpl<FocusOnTemplateMappe
         Integer userId = userDetails.getUser().getId();
         focusOnTemplate.setUserId(userId);
         if (save(focusOnTemplate)) {
-
+            stringRedisTemplate.opsForZSet().add(RedisConstants.USER_FOCUS_TEMPLATE + userId, String.valueOf(focusOnTemplate.getId()), Integer.valueOf(focusOnTemplate.getFocusStartTime().replace(":","")));
         }
-
         return Result.success();
     }
 }

@@ -5,8 +5,10 @@ import java.time.LocalDate;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * <p>
@@ -18,6 +20,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
 public class WaterIntake implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,4 +49,10 @@ public class WaterIntake implements Serializable {
     private Integer intakeReal;
 
 
+    public WaterIntake(Integer userId, LocalDate date, Integer intakeTarget, Integer water) {
+        this.userId = userId;
+        this.intakeDate = date;
+        this.intakeTarget = intakeTarget;
+        this.intakeReal = water;
+    }
 }
