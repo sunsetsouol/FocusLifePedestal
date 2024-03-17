@@ -1,7 +1,7 @@
 package com.qgStudio.pedestal.service.impl;
 
 import com.alibaba.fastjson2.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qgStudio.pedestal.constant.RedisConstants;
 import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
 import com.qgStudio.pedestal.entity.po.User;
@@ -10,7 +10,6 @@ import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.ResultStatusEnum;
 import com.qgStudio.pedestal.mapper.UserMapper;
 import com.qgStudio.pedestal.service.IUserService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qgStudio.pedestal.utils.JwtUtils;
 import com.qgStudio.pedestal.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -10,7 +10,6 @@ import com.qgStudio.pedestal.utils.RedisCache;
 import com.qgStudio.pedestal.utils.WebUtils;
 import io.jsonwebtoken.Claims;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

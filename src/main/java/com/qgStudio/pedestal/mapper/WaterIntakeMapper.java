@@ -1,8 +1,7 @@
 package com.qgStudio.pedestal.mapper;
 
-import com.qgStudio.pedestal.entity.po.WaterIntake;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.qgStudio.pedestal.entity.vo.WaterIntakeAddVo;
+import com.qgStudio.pedestal.entity.po.WaterIntake;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Update;
 

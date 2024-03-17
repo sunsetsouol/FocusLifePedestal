@@ -1,8 +1,9 @@
 package com.qgStudio.pedestal.mapper;
 
-import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * <p>
@@ -15,4 +16,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface FocusOnTemplateMapper extends BaseMapper<FocusOnTemplate> {
 
+    @Update("update focus_on_template set completion = completion + 1 where id = #{id} and user_id = #{userId}")
+    int increase(Integer id, Integer userId);
 }

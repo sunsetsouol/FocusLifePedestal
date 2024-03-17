@@ -1,6 +1,7 @@
 package com.qgStudio.pedestal.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qgStudio.pedestal.constant.RedisConstants;
 import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
 import com.qgStudio.pedestal.entity.po.User;
@@ -11,10 +12,8 @@ import com.qgStudio.pedestal.entity.vo.WaterIntakeGetRangeVo;
 import com.qgStudio.pedestal.mapper.UserMapper;
 import com.qgStudio.pedestal.mapper.WaterIntakeMapper;
 import com.qgStudio.pedestal.service.IWaterIntakeService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 

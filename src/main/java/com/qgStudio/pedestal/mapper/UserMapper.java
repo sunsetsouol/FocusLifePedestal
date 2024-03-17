@@ -1,7 +1,7 @@
 package com.qgStudio.pedestal.mapper;
 
-import com.qgStudio.pedestal.entity.po.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.qgStudio.pedestal.entity.po.User;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

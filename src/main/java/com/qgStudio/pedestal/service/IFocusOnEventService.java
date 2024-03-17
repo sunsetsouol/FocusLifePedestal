@@ -2,6 +2,7 @@ package com.qgStudio.pedestal.service;
 
 import com.qgStudio.pedestal.entity.po.FocusOnEvent;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qgStudio.pedestal.entity.vo.Result;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IFocusOnEventService extends IService<FocusOnEvent> {
 
+    Result addEvent(FocusOnEvent focusOnEvent);
 }

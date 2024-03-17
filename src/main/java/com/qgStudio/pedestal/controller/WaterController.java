@@ -2,7 +2,7 @@ package com.qgStudio.pedestal.controller;
 
 import com.qgStudio.pedestal.entity.po.WaterIntake;
 import com.qgStudio.pedestal.entity.vo.Result;
-import com.qgStudio.pedestal.entity.vo.WaterIntakeAddVo;
+import com.qgStudio.pedestal.entity.vo.IntegerVo;
 import com.qgStudio.pedestal.entity.vo.WaterIntakeGetRangeVo;
 import com.qgStudio.pedestal.entity.vo.WaterIntakeGetVo;
 import com.qgStudio.pedestal.service.IWaterIntakeService;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -46,7 +45,7 @@ public class WaterController {
 
     // 非移动接口
     @PostMapping("/addWater")
-    public Result addWater(@RequestBody @Validated WaterIntakeAddVo waterIntakeAddVo) {
-        return waterIntakeService.addWaterIntake(waterIntakeAddVo.getWater());
+    public Result addWater(@RequestBody @Validated IntegerVo integerVo) {
+        return waterIntakeService.addWaterIntake(integerVo.getNumber());
     }
 }

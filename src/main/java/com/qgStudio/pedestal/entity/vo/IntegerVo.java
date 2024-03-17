@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class WaterIntakeAddVo {
-    @NotNull
-    private Integer water;
+public class IntegerVo {
+    @NotNull(message = "参数不能为空")
+    private Integer number;
 }
