@@ -4,6 +4,8 @@ import com.qgStudio.pedestal.entity.po.FocusOnEvent;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qgStudio.pedestal.entity.vo.Result;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -15,4 +17,6 @@ import com.qgStudio.pedestal.entity.vo.Result;
 public interface IFocusOnEventService extends IService<FocusOnEvent> {
 
     Result addEvent(FocusOnEvent focusOnEvent);
+
+    Result<List<FocusOnEvent>> getEvents(Integer templateId);
 }

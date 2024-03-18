@@ -1,7 +1,6 @@
 package com.qgStudio.pedestal.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qgStudio.pedestal.constant.RedisConstants;
 import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
 import com.qgStudio.pedestal.entity.po.User;
@@ -12,13 +11,16 @@ import com.qgStudio.pedestal.entity.vo.WaterIntakeGetRangeVo;
 import com.qgStudio.pedestal.mapper.UserMapper;
 import com.qgStudio.pedestal.mapper.WaterIntakeMapper;
 import com.qgStudio.pedestal.service.IWaterIntakeService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -46,25 +48,30 @@ public class WaterIntakeServiceImpl extends ServiceImpl<WaterIntakeMapper, Water
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userDetails.getUser();
         RLock lock = redissonClient.getLock(RedisConstants.WATER_INTAKE_LOCK + user.getId());
-        if (lock.tryLock()) {
-            try {
-                LambdaQueryWrapper<WaterIntake> waterIntakeLambdaQueryWrapper
-                        = new LambdaQueryWrapper<>();
-                waterIntakeLambdaQueryWrapper.eq(WaterIntake::getUserId, user.getId())
-                                .eq(WaterIntake::getIntakeDate, LocalDate.now());
-                if (waterIntakeMapper.selectOne(waterIntakeLambdaQueryWrapper) == null) {
-                    user = userMapper.selectById(user.getId());
-                    WaterIntake waterIntake = new WaterIntake(user.getId(), LocalDate.now(),user.getDefaultWaterIntake(), intakeWater);
-                    waterIntakeMapper.insert(waterIntake);
-                } else {
-                    waterIntakeMapper.intake(intakeWater,user.getId());
+        try {
+            if (lock.tryLock(1, TimeUnit.SECONDS)) {
+                try {
+                    LambdaQueryWrapper<WaterIntake> waterIntakeLambdaQueryWrapper
+                            = new LambdaQueryWrapper<>();
+                    waterIntakeLambdaQueryWrapper.eq(WaterIntake::getUserId, user.getId())
+                                    .eq(WaterIntake::getIntakeDate, LocalDate.now());
+                    if (waterIntakeMapper.selectOne(waterIntakeLambdaQueryWrapper) == null) {
+                        user = userMapper.selectById(user.getId());
+                        WaterIntake waterIntake = new WaterIntake(user.getId(), LocalDate.now(),user.getDefaultWaterIntake(), intakeWater);
+                        waterIntakeMapper.insert(waterIntake);
+                    } else {
+                        waterIntakeMapper.intake(intakeWater,user.getId());
+                    }
+                } finally {
+                    lock.unlock();
                 }
-            } finally {
-                lock.unlock();
             }
+            return Result.success();
+        } catch (InterruptedException e) {
+            // Todo:mqtt返回队列
+            throw new RuntimeException(e);
         }
 //        stringRedisTemplate.opsForList().leftPush(RedisConstants.WATER_INTAKE + LocalDate.now() + ":" + waterIntakeVo.getUserId(), String.valueOf(waterIntakeVo.getWater()));
-        return Result.success();
     }
 
     @Override

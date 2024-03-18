@@ -36,7 +36,14 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.qgStudio")).paths(PathSelectors.ant("/focus/**"))
                 .build().globalOperationParameters(setHeaderToken()).enable(enable);
     }
-
+    @Bean
+    public Docket createRestApi2(Environment environment) {
+        Profiles of = Profiles.of("dev", "test");
+        boolean enable = environment.acceptsProfiles(of);
+        return new Docket(DocumentationType.SWAGGER_2).groupName("用户接口").apiInfo(apiInfo()).select()
+                .apis(RequestHandlerSelectors.basePackage("com.qgStudio")).paths(PathSelectors.ant("/user/**"))
+                .build().globalOperationParameters(setHeaderToken()).enable(enable);
+    }
     @Bean
     public Docket createRestApi1(Environment environment) {
         Profiles of = Profiles.of("dev", "test");

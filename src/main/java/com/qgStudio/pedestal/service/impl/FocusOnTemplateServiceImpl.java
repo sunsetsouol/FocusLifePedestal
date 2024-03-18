@@ -15,6 +15,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * <p>
  *  服务实现类
@@ -56,9 +59,30 @@ public class FocusOnTemplateServiceImpl extends ServiceImpl<FocusOnTemplateMappe
         focusOnTemplateLambdaQueryWrapper.eq(FocusOnTemplate::getId, templateId.getNumber())
                 .eq(FocusOnTemplate::getUserId, userId);
         if (focusOnTemplateMapper.delete(focusOnTemplateLambdaQueryWrapper) == 1) {
-            stringRedisTemplate.opsForZSet().remove(RedisConstants.USER_FOCUS_TEMPLATE + userId, String.valueOf(templateId));
+            stringRedisTemplate.opsForZSet().remove(RedisConstants.USER_FOCUS_TEMPLATE + userId, String.valueOf(templateId.getNumber()));
             return Result.success();
         }
         return Result.fail(ResultStatusEnum.TEMPLATE_NOT_EXIST);
+    }
+
+    @Override
+    public Result<List<FocusOnTemplate>> getTemplates() {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer userId = userDetails.getUser().getId();
+        List<Integer> ids = stringRedisTemplate.opsForZSet().range(RedisConstants.USER_FOCUS_TEMPLATE + userId, 0, -1)
+                .stream().map(Integer::parseInt).collect(Collectors.toList());
+        return Result.success(ResultStatusEnum.SUCCESS,focusOnTemplateMapper.selectBatchIds(ids));
+    }
+
+    @Override
+    public Result updateTemplate(FocusOnTemplate focusOnTemplate) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer userId = userDetails.getUser().getId();
+        LambdaQueryWrapper<FocusOnTemplate> focusOnTemplateLambdaQueryWrapper
+                = new LambdaQueryWrapper<>();
+        focusOnTemplateLambdaQueryWrapper.eq(FocusOnTemplate::getId, focusOnTemplate.getId())
+                .eq(FocusOnTemplate::getUserId, userId);
+        focusOnTemplateMapper.update(focusOnTemplate,focusOnTemplateLambdaQueryWrapper);
+        return Result.success();
     }
 }

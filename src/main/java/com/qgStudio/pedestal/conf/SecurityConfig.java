@@ -39,7 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // 登录允许匿名访问
-                .antMatchers("/user/**").anonymous()
+                .antMatchers("/user/login").anonymous()
+                .antMatchers("/user/register").anonymous()
                 .anyRequest().authenticated();
         http.addFilterBefore(platformJwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }

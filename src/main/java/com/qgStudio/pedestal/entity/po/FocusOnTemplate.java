@@ -1,15 +1,20 @@
 package com.qgStudio.pedestal.entity.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.qgStudio.pedestal.group.Update;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
@@ -23,12 +28,15 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(value="专注模板对象", description="可重复使用的专注任务")
 public class FocusOnTemplate implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
+    @NotNull(message = "模板id不能为空",groups = Update.class)
     private Integer id;
 
     /**
@@ -40,6 +48,8 @@ public class FocusOnTemplate implements Serializable {
     /**
      * 用户id
      */
+    @TableField(select = false)
+    @Null(message = "用户id不需要传入",groups = Update.class)
     private Integer userId;
 
     /**
@@ -61,6 +71,7 @@ public class FocusOnTemplate implements Serializable {
     /**
      * 完成次数
      */
+    @Null(message = "完成次数不需要传入",groups = Update.class)
     private Integer completion;
 
     /**

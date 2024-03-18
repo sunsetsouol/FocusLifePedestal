@@ -43,6 +43,7 @@ public class WaterController {
         return waterIntakeService.getRangeWaterIntake(waterIntakeGetRangeVo);
     }
 
+
     // 非移动接口
     @PostMapping("/addWater")
     public Result addWater(@RequestBody @Validated IntegerVo integerVo) {

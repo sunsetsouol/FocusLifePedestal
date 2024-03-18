@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.qgStudio.pedestal.entity.vo.IntegerVo;
 import com.qgStudio.pedestal.entity.vo.Result;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -23,4 +25,8 @@ public interface IFocusOnTemplateService extends IService<FocusOnTemplate> {
     Result addTemplate(FocusOnTemplate focusOnTemplate);
 
     Result deleteTemplate(IntegerVo templateId);
+
+    Result<List<FocusOnTemplate>> getTemplates();
+
+    Result updateTemplate(FocusOnTemplate focusOnTemplate);
 }

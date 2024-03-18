@@ -1,21 +1,21 @@
 package com.qgStudio.pedestal.service.impl;
 
 import com.alibaba.fastjson2.JSON;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qgStudio.pedestal.constant.RedisConstants;
 import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
 import com.qgStudio.pedestal.entity.po.User;
-import com.qgStudio.pedestal.entity.vo.LoginUserVo;
-import com.qgStudio.pedestal.entity.vo.Result;
-import com.qgStudio.pedestal.entity.vo.ResultStatusEnum;
+import com.qgStudio.pedestal.entity.vo.*;
 import com.qgStudio.pedestal.mapper.UserMapper;
 import com.qgStudio.pedestal.service.IUserService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qgStudio.pedestal.utils.JwtUtils;
 import com.qgStudio.pedestal.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -78,5 +78,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public Result getCode(String email) {
         return null;
+    }
+
+    @Override
+    public Result setIntake(IntegerVo intake) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer userId = userDetails.getUser().getId();
+        userMapper.setIntake(userId, intake.getNumber());
+        return Result.success();
+    }
+
+    @Override
+    public Result setReminderInterval(IntegerVo reminderInterval) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer userId = userDetails.getUser().getId();
+        userMapper.setReminderInterval(userId, reminderInterval.getNumber());
+        return Result.success();
+    }
+
+    @Override
+    public Result<WaterReminderInfo> getWaterReminderInfo() {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer userId = userDetails.getUser().getId();
+        User user = userMapper.selectOne(new LambdaQueryWrapper<User>()
+                .eq(User::getId, userId)
+                .select(User::getDefaultReminderInterval, User::getDefaultWaterIntake));
+        return Result.success(ResultStatusEnum.SUCCESS,new WaterReminderInfo(user.getDefaultWaterIntake(), user.getDefaultReminderInterval()));
     }
 }

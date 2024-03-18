@@ -10,6 +10,7 @@ import com.qgStudio.pedestal.utils.RedisCache;
 import com.qgStudio.pedestal.utils.WebUtils;
 import io.jsonwebtoken.Claims;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,7 +42,12 @@ public class PlatformJwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         String requestURI = httpServletRequest.getRequestURI();
-        if (requestURI.startsWith("/user/")){
+        if (requestURI.startsWith("/user/login") ||
+                requestURI.startsWith("/user/register") ||
+                requestURI.startsWith("/swagger") ||
+                requestURI.startsWith("/v2/api-docs") ||
+                requestURI.startsWith("/webjars") || requestURI.startsWith("/doc.html") ||
+                requestURI.startsWith("/configuration")) {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
