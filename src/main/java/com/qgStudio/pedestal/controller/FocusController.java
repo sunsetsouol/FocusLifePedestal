@@ -1,5 +1,6 @@
 package com.qgStudio.pedestal.controller;
 
+import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
 import com.qgStudio.pedestal.entity.po.FocusOnEvent;
 import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
 import com.qgStudio.pedestal.entity.vo.IntegerVo;
@@ -11,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,13 +58,17 @@ public class FocusController {
     @PostMapping("/addFocusEvent")
     @ApiOperation("添加专注事件（专注一次）")
     public Result addFocusEvent(@RequestBody @Validated @ApiParam("事件对象") FocusOnEvent focusOnEvent) {
-        return focusOnEventService.addEvent(focusOnEvent);
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer id = userDetails.getUser().getId();
+        return focusOnEventService.addEvent(id, focusOnEvent);
     }
 
     @GetMapping("/getTemplate")
     @ApiOperation("获取专注模板")
     public Result<List<FocusOnTemplate>> getTemplate() {
-        return focusOnTemplateService.getTemplates();
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer id = userDetails.getUser().getId();
+        return focusOnTemplateService.getTemplates(id);
     }
 
     @GetMapping("/getFocusEvent/{templateId}")

@@ -26,7 +26,7 @@ public interface IFocusOnTemplateService extends IService<FocusOnTemplate> {
 
     Result deleteTemplate(IntegerVo templateId);
 
-    Result<List<FocusOnTemplate>> getTemplates();
+    Result<List<FocusOnTemplate>> getTemplates(Integer userId);
 
     Result updateTemplate(FocusOnTemplate focusOnTemplate);
 }

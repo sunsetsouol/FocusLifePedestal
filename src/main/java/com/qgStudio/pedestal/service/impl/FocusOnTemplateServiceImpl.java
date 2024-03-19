@@ -66,9 +66,7 @@ public class FocusOnTemplateServiceImpl extends ServiceImpl<FocusOnTemplateMappe
     }
 
     @Override
-    public Result<List<FocusOnTemplate>> getTemplates() {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Integer userId = userDetails.getUser().getId();
+    public Result<List<FocusOnTemplate>> getTemplates(Integer userId) {
         List<Integer> ids = stringRedisTemplate.opsForZSet().range(RedisConstants.USER_FOCUS_TEMPLATE + userId, 0, -1)
                 .stream().map(Integer::parseInt).collect(Collectors.toList());
         return Result.success(ResultStatusEnum.SUCCESS,focusOnTemplateMapper.selectBatchIds(ids));

@@ -38,9 +38,7 @@ public class FocusOnEventServiceImpl extends ServiceImpl<FocusOnEventMapper, Foc
 
     @Override
     @Transactional
-    public Result addEvent(FocusOnEvent focusOnEvent) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Integer userId = userDetails.getUser().getId();
+    public Result addEvent(Integer userId, FocusOnEvent focusOnEvent) {
 
         if (focusOnTemplateMapper.increase(focusOnEvent.getFocusId(),userId) == 1) {
             focusOnEventMapper.insert(focusOnEvent);

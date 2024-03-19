@@ -1,5 +1,6 @@
 package com.qgStudio.pedestal.controller;
 
+import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
 import com.qgStudio.pedestal.entity.vo.IntegerVo;
 import com.qgStudio.pedestal.entity.vo.LoginUserVo;
 import com.qgStudio.pedestal.entity.vo.Result;
@@ -9,6 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,6 +62,8 @@ public class UserController {
     @GetMapping("/getWaterReminderInfo")
     @ApiOperation("获取喝水量和提醒间隔")
     public Result<WaterReminderInfo> getWaterReminderInfo() {
-        return userService.getWaterReminderInfo();
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer id = userDetails.getUser().getId();
+        return userService.getWaterReminderInfo(id);
     }
 }

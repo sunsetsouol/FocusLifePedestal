@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface IFocusOnEventService extends IService<FocusOnEvent> {
 
-    Result addEvent(FocusOnEvent focusOnEvent);
+    Result addEvent(Integer userId, FocusOnEvent focusOnEvent);
 
     Result<List<FocusOnEvent>> getEvents(Integer templateId);
 }

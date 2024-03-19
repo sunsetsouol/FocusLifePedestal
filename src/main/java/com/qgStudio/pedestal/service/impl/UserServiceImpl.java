@@ -97,9 +97,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Result<WaterReminderInfo> getWaterReminderInfo() {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Integer userId = userDetails.getUser().getId();
+    public Result<WaterReminderInfo> getWaterReminderInfo(Integer userId) {
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>()
                 .eq(User::getId, userId)
                 .select(User::getDefaultReminderInterval, User::getDefaultWaterIntake));

@@ -1,5 +1,6 @@
 package com.qgStudio.pedestal.controller;
 
+import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
 import com.qgStudio.pedestal.entity.po.WaterIntake;
 import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.IntegerVo;
@@ -10,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,19 +36,25 @@ public class WaterController {
     @PostMapping("/getIntake")
     @ApiOperation(value = "获取摄水量", notes = "获取摄水量")
     public Result<WaterIntake> getWater(@RequestBody @Validated @ApiParam WaterIntakeGetVo waterIntakeGetVo) {
-        return waterIntakeService.getWaterIntake(waterIntakeGetVo.getTime());
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer id = userDetails.getUser().getId();
+        return waterIntakeService.getWaterIntake(id, waterIntakeGetVo.getTime());
     }
 
     @PostMapping("/getIntakeRange")
     @ApiOperation(value = "获取一段时间摄水量", notes = "获取摄水量")
     public Result<List<WaterIntake>> getRangeWater(@RequestBody @Validated @ApiParam WaterIntakeGetRangeVo waterIntakeGetRangeVo) {
-        return waterIntakeService.getRangeWaterIntake(waterIntakeGetRangeVo);
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer id = userDetails.getUser().getId();
+        return waterIntakeService.getRangeWaterIntake(id, waterIntakeGetRangeVo);
     }
 
 
     // 非移动接口
     @PostMapping("/addWater")
     public Result addWater(@RequestBody @Validated IntegerVo integerVo) {
-        return waterIntakeService.addWaterIntake(integerVo.getNumber());
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer id = userDetails.getUser().getId();
+        return waterIntakeService.addWaterIntake(id, integerVo.getNumber());
     }
 }

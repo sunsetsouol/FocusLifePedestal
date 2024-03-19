@@ -19,10 +19,10 @@ import java.util.List;
 public interface IWaterIntakeService extends IService<WaterIntake> {
 
 
-    Result addWaterIntake(Integer intakeWater);
+    Result addWaterIntake(Integer userId,Integer intakeWater);
 
-    Result<WaterIntake> getWaterIntake(LocalDate time);
+    Result<WaterIntake> getWaterIntake(Integer userId, LocalDate time);
 
-    Result<List<WaterIntake>> getRangeWaterIntake(WaterIntakeGetRangeVo waterIntakeGetRangeVo);
+    Result<List<WaterIntake>> getRangeWaterIntake(Integer userId, WaterIntakeGetRangeVo waterIntakeGetRangeVo);
 
 }

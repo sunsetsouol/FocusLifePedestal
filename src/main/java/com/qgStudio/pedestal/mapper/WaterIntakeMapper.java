@@ -5,6 +5,8 @@ import com.qgStudio.pedestal.entity.po.WaterIntake;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Update;
 
+import java.time.LocalDate;
+
 /**
  * <p>
  *  Mapper 接口
@@ -16,6 +18,6 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface WaterIntakeMapper extends BaseMapper<WaterIntake> {
 
-    @Update("update water_intake set intake_real = intake_real + #{water} where user_id = #{userId}")
-    void intake(Integer water, Integer userId);
+    @Update("update water_intake set intake_real = intake_real + #{water} where user_id = #{userId} and intake_date = #{date}")
+    void intake(Integer water, Integer userId, LocalDate date);
 }

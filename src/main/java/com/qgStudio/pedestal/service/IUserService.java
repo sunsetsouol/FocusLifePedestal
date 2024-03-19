@@ -27,6 +27,6 @@ public interface IUserService extends IService<User> {
 
     Result setReminderInterval(IntegerVo reminderInterval);
 
-    Result<WaterReminderInfo> getWaterReminderInfo();
+    Result<WaterReminderInfo> getWaterReminderInfo(Integer userId);
 
 }

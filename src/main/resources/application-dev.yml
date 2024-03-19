@@ -48,3 +48,17 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+mqtt:
+  host: tcp://broker.emqx.io:1883
+  username: test
+  password: test
+  qos: 2
+  clientId: mqttx_bb3231 #ClientId_local必须唯一 比如你已经定了叫ABC  那你就一直叫ABC  其他地方就不要使用ABC了
+  timeout: 10
+  keepalive: 20
+  focusEventTopic: /Focus_Life/focusEvent           #任务完成后发送的topic
+  addWaterTopic: /Focus_Life/addWater               #喝水一次后发送的topic
+  getFocusOnTemplate: /Focus_Life/getTemplate       #主动获取任务模板的topic
+  getWaterTopic: /Focus_Life/getWater               #主动获取今日喝水情况的topic
+  sendTemplateTopic: /Focus_Life/sendTemplate/      #接收任务模板情况的topic
+  sendWaterTopic: /Focus_Life/sendWater/            #接收今日喝水情况的topic

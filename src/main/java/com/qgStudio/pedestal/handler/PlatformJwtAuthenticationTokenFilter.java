@@ -46,7 +46,9 @@ public class PlatformJwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 requestURI.startsWith("/user/register") ||
                 requestURI.startsWith("/swagger") ||
                 requestURI.startsWith("/v2/api-docs") ||
-                requestURI.startsWith("/webjars") || requestURI.startsWith("/doc.html") ||
+                requestURI.startsWith("/webjars") ||
+                requestURI.startsWith("/doc.html") ||
+                requestURI.startsWith("/test") ||
                 requestURI.startsWith("/configuration")) {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;

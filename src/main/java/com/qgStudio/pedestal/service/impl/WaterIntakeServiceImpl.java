@@ -44,23 +44,22 @@ public class WaterIntakeServiceImpl extends ServiceImpl<WaterIntakeMapper, Water
     }
 
     @Override
-    public Result addWaterIntake(Integer intakeWater) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userDetails.getUser();
-        RLock lock = redissonClient.getLock(RedisConstants.WATER_INTAKE_LOCK + user.getId());
+    public Result addWaterIntake(Integer userId, Integer intakeWater) {
+        RLock lock = redissonClient.getLock(RedisConstants.WATER_INTAKE_LOCK + userId);
+        LocalDate now = LocalDate.now();
         try {
-            if (lock.tryLock(1, TimeUnit.SECONDS)) {
+            if (lock.tryLock(30,30, TimeUnit.SECONDS)) {
                 try {
                     LambdaQueryWrapper<WaterIntake> waterIntakeLambdaQueryWrapper
                             = new LambdaQueryWrapper<>();
-                    waterIntakeLambdaQueryWrapper.eq(WaterIntake::getUserId, user.getId())
-                                    .eq(WaterIntake::getIntakeDate, LocalDate.now());
+                    waterIntakeLambdaQueryWrapper.eq(WaterIntake::getUserId, userId)
+                                    .eq(WaterIntake::getIntakeDate, now);
                     if (waterIntakeMapper.selectOne(waterIntakeLambdaQueryWrapper) == null) {
-                        user = userMapper.selectById(user.getId());
-                        WaterIntake waterIntake = new WaterIntake(user.getId(), LocalDate.now(),user.getDefaultWaterIntake(), intakeWater);
+                        User user = userMapper.selectById(userId);
+                        WaterIntake waterIntake = new WaterIntake(userId, now,user.getDefaultWaterIntake(), intakeWater);
                         waterIntakeMapper.insert(waterIntake);
                     } else {
-                        waterIntakeMapper.intake(intakeWater,user.getId());
+                        waterIntakeMapper.intake(intakeWater,userId,now);
                     }
                 } finally {
                     lock.unlock();
@@ -75,11 +74,9 @@ public class WaterIntakeServiceImpl extends ServiceImpl<WaterIntakeMapper, Water
     }
 
     @Override
-    public Result<WaterIntake> getWaterIntake(LocalDate time) {
+    public Result<WaterIntake> getWaterIntake(Integer userId, LocalDate time) {
 //        List<String> range = stringRedisTemplate.opsForList().range(RedisConstants.WATER_INTAKE + LocalDate.now() + ":" + userId, 0, -1);
 //        Integer sum = range.stream().map(Integer::parseInt).reduce(0, Integer::sum);
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Integer userId = userDetails.getUser().getId();
         LambdaQueryWrapper<WaterIntake> waterIntakeLambdaQueryWrapper
                 = new LambdaQueryWrapper<>();
         waterIntakeLambdaQueryWrapper.eq(WaterIntake::getUserId, userId)
@@ -89,9 +86,7 @@ public class WaterIntakeServiceImpl extends ServiceImpl<WaterIntakeMapper, Water
     }
 
     @Override
-    public Result<List<WaterIntake>> getRangeWaterIntake(WaterIntakeGetRangeVo waterIntakeGetRangeVo) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Integer userId = userDetails.getUser().getId();
+    public Result<List<WaterIntake>> getRangeWaterIntake(Integer userId, WaterIntakeGetRangeVo waterIntakeGetRangeVo) {
         LambdaQueryWrapper<WaterIntake> waterIntakeLambdaQueryWrapper
                 = new LambdaQueryWrapper<>();
         waterIntakeLambdaQueryWrapper.eq(WaterIntake::getUserId, userId)
