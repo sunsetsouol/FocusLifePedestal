@@ -62,3 +62,4 @@ mqtt:
   getWaterTopic: /Focus_Life/getWater               #主动获取今日喝水情况的topic
   sendTemplateTopic: /Focus_Life/sendTemplate/      #接收任务模板情况的topic
   sendWaterTopic: /Focus_Life/sendWater/            #接收今日喝水情况的topic
+  weatherTopic: /Focus_Life/weather                 #接收天气情况的topic

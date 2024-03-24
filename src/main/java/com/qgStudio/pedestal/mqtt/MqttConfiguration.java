@@ -1,5 +1,6 @@
 package com.qgStudio.pedestal.mqtt;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @Slf4j
+@Data
 public class MqttConfiguration {
 
     @Value("${mqtt.host}")
@@ -41,6 +43,8 @@ public class MqttConfiguration {
     String sendTemplateTopic;
     @Value("${mqtt.sendWaterTopic}")
     String sendWaterTopic;
+    @Value("${mqtt.weatherTopic}")
+    String weatherTopic;
 //    @Value("${mqtt.topic3}")
 //    String topic3;
 //    @Value("${mqtt.topic4}")

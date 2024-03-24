@@ -104,21 +104,21 @@ public class MyMQTTCallback implements MqttCallbackExtended {
                 IntegerVo integerVo = JSON.parseObject(mqttMsg.getData(), IntegerVo.class);
                 waterIntakeService.addWaterIntake(userPedestalMap.getUserId(), integerVo.getNumber());
                 Result<WaterIntake> waterIntake = waterIntakeService.getWaterIntake(userPedestalMap.getUserId(), LocalDate.now());
-                mqttClient.publish(mqttConfiguration.sendWaterTopic + equipmentNumber, JSON.toJSONBytes(waterIntake), 2, false);
+                mqttClient.publish(mqttConfiguration.sendWaterTopic + equipmentNumber, JSON.toJSONBytes(waterIntake), 2, true);
             } else if(topic.equals(mqttConfiguration.focusEventTopic)){
                 //专注一次
                 FocusOnEvent focusOnEvent = JSON.parseObject(mqttMsg.getData(), FocusOnEvent.class);
                 focusOnEventService.addEvent(userPedestalMap.getUserId(), focusOnEvent);
                 Result<List<FocusOnTemplate>> templates = focusOnTemplateService.getTemplates(userPedestalMap.getUserId());
-                mqttClient.publish(mqttConfiguration.sendTemplateTopic + equipmentNumber, JSON.toJSONBytes(templates), 2, false);
+                mqttClient.publish(mqttConfiguration.sendTemplateTopic + equipmentNumber, JSON.toJSONBytes(templates), 2, true);
             } else if(topic.equals(mqttConfiguration.getFocusOnTemplate)){
                 //获取模板
                 Result<List<FocusOnTemplate>> templates = focusOnTemplateService.getTemplates(userPedestalMap.getUserId());
-                mqttClient.publish(mqttConfiguration.sendTemplateTopic + equipmentNumber, JSON.toJSONBytes(templates), 2, false);
+                mqttClient.publish(mqttConfiguration.sendTemplateTopic + equipmentNumber, JSON.toJSONBytes(templates), 2, true);
             } else if(topic.equals(mqttConfiguration.getWaterTopic)){
                 //获取今日喝水量
                 Result<WaterIntake> waterIntake = waterIntakeService.getWaterIntake(userPedestalMap.getUserId(), LocalDate.now());
-                mqttClient.publish(mqttConfiguration.sendWaterTopic + equipmentNumber, JSON.toJSONBytes(waterIntake), 2, false);
+                mqttClient.publish(mqttConfiguration.sendWaterTopic + equipmentNumber, JSON.toJSONBytes(waterIntake), 2, true);
             }
         } catch (Exception e) {
             e.printStackTrace();
