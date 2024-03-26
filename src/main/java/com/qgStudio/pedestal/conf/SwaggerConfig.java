@@ -48,7 +48,7 @@ public class SwaggerConfig {
     public Docket createRestApi1(Environment environment) {
         Profiles of = Profiles.of("dev", "test");
         boolean enable = environment.acceptsProfiles(of);
-        return new Docket(DocumentationType.SWAGGER_2).groupName("登陆接口").apiInfo(apiInfo()).select()
+        return new Docket(DocumentationType.SWAGGER_2).groupName("喝水接口").apiInfo(apiInfo()).select()
                 .apis(RequestHandlerSelectors.basePackage("com.qgStudio")).paths(PathSelectors.ant("/water/**"))
                 .build().enable(enable);
     }

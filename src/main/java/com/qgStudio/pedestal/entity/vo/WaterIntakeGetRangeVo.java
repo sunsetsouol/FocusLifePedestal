@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 /**
  * @author yinjunbiao
@@ -20,8 +21,8 @@ import javax.validation.constraints.NotNull;
 public class WaterIntakeGetRangeVo {
     @ApiModelProperty(value = "开始时间", required = true)
     @NotNull
-    private String startTime;
+    private LocalDate startTime;
     @ApiModelProperty(value = "结束时间", required = true)
     @NotNull
-    private String endTime;
+    private LocalDate endTime;
 }
