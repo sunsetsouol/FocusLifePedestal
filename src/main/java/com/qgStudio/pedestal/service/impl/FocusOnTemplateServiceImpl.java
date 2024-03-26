@@ -3,6 +3,8 @@ package com.qgStudio.pedestal.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qgStudio.pedestal.constant.RedisConstants;
 import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
+import com.qgStudio.pedestal.entity.dto.AddFocusOnTemplateDTO;
+import com.qgStudio.pedestal.entity.dto.UpdateFocusOnTemplateDTO;
 import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
 import com.qgStudio.pedestal.entity.vo.IntegerVo;
 import com.qgStudio.pedestal.entity.vo.Result;
@@ -39,10 +41,12 @@ public class FocusOnTemplateServiceImpl extends ServiceImpl<FocusOnTemplateMappe
 
 
     @Override
-    public Result addTemplate(FocusOnTemplate focusOnTemplate) {
+    public Result addTemplate(AddFocusOnTemplateDTO focusOnTemplateDTO) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Integer userId = userDetails.getUser().getId();
+        FocusOnTemplate focusOnTemplate = new FocusOnTemplate(focusOnTemplateDTO);
         focusOnTemplate.setUserId(userId);
+
         if (save(focusOnTemplate)) {
             stringRedisTemplate.opsForZSet().add(RedisConstants.USER_FOCUS_TEMPLATE + userId, String.valueOf(focusOnTemplate.getId()), Integer.valueOf(focusOnTemplate.getFocusStartTime().replace(":","")));
         }
@@ -73,14 +77,17 @@ public class FocusOnTemplateServiceImpl extends ServiceImpl<FocusOnTemplateMappe
     }
 
     @Override
-    public Result updateTemplate(FocusOnTemplate focusOnTemplate) {
+    public Result updateTemplate(UpdateFocusOnTemplateDTO updateFocusOnTemplateDTO) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Integer userId = userDetails.getUser().getId();
         LambdaQueryWrapper<FocusOnTemplate> focusOnTemplateLambdaQueryWrapper
                 = new LambdaQueryWrapper<>();
-        focusOnTemplateLambdaQueryWrapper.eq(FocusOnTemplate::getId, focusOnTemplate.getId())
+        focusOnTemplateLambdaQueryWrapper.eq(FocusOnTemplate::getId, updateFocusOnTemplateDTO.getId())
                 .eq(FocusOnTemplate::getUserId, userId);
-        focusOnTemplateMapper.update(focusOnTemplate,focusOnTemplateLambdaQueryWrapper);
-        return Result.success();
+        FocusOnTemplate focusOnTemplate = new FocusOnTemplate(updateFocusOnTemplateDTO);
+        if (focusOnTemplateMapper.update(focusOnTemplate,focusOnTemplateLambdaQueryWrapper)==1) {
+            return Result.success();
+        }
+        return Result.fail(ResultStatusEnum.TEMPLATE_NOT_EXIST);
     }
 }

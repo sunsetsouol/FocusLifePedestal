@@ -1,6 +1,8 @@
 package com.qgStudio.pedestal.controller;
 
 import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
+import com.qgStudio.pedestal.entity.dto.AddFocusOnTemplateDTO;
+import com.qgStudio.pedestal.entity.dto.UpdateFocusOnTemplateDTO;
 import com.qgStudio.pedestal.entity.po.FocusOnEvent;
 import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
 import com.qgStudio.pedestal.entity.vo.IntegerVo;
@@ -40,8 +42,8 @@ public class FocusController {
 
     @PostMapping("/addTemplate")
     @ApiOperation("添加专注模板")
-    public Result addTemplate(@RequestBody @Validated @ApiParam("模板对象") FocusOnTemplate focusOnTemplate) {
-        return focusOnTemplateService.addTemplate(focusOnTemplate);
+    public Result addTemplate(@RequestBody @Validated @ApiParam("模板对象") AddFocusOnTemplateDTO addFocusOnTemplateDTO) {
+        return focusOnTemplateService.addTemplate(addFocusOnTemplateDTO);
     }
 
     @PostMapping("/deleteTemplate")
@@ -52,8 +54,8 @@ public class FocusController {
 
     @PostMapping("/updateTemplate")
     @ApiOperation("更新专注模板")
-    public Result updateTemplate(@RequestBody @ApiParam("模板对象")@Validated(Update.class) FocusOnTemplate focusOnTemplate) {
-        return focusOnTemplateService.updateTemplate(focusOnTemplate);
+    public Result updateTemplate(@RequestBody @ApiParam("模板对象")@Validated(Update.class) UpdateFocusOnTemplateDTO updateFocusOnTemplateDTO) {
+        return focusOnTemplateService.updateTemplate(updateFocusOnTemplateDTO);
     }
     @PostMapping("/addFocusEvent")
     @ApiOperation("添加专注事件（专注一次）")

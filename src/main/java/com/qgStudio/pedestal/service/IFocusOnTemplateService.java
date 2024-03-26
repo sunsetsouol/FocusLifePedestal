@@ -1,5 +1,7 @@
 package com.qgStudio.pedestal.service;
 
+import com.qgStudio.pedestal.entity.dto.AddFocusOnTemplateDTO;
+import com.qgStudio.pedestal.entity.dto.UpdateFocusOnTemplateDTO;
 import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qgStudio.pedestal.entity.vo.IntegerVo;
@@ -22,11 +24,11 @@ public interface IFocusOnTemplateService extends IService<FocusOnTemplate> {
      * @param focusOnTemplate 专注模板
      * @return 结果
      */
-    Result addTemplate(FocusOnTemplate focusOnTemplate);
+    Result addTemplate(AddFocusOnTemplateDTO focusOnTemplate);
 
     Result deleteTemplate(IntegerVo templateId);
 
     Result<List<FocusOnTemplate>> getTemplates(Integer userId);
 
-    Result updateTemplate(FocusOnTemplate focusOnTemplate);
+    Result updateTemplate(UpdateFocusOnTemplateDTO focusOnTemplate);
 }

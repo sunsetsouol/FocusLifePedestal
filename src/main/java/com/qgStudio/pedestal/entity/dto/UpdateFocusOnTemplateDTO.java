@@ -1,11 +1,9 @@
-package com.qgStudio.pedestal.entity.po;
+package com.qgStudio.pedestal.entity.dto;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.qgStudio.pedestal.entity.dto.AddFocusOnTemplateDTO;
-import com.qgStudio.pedestal.entity.dto.UpdateFocusOnTemplateDTO;
 import com.qgStudio.pedestal.group.Update;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,26 +16,24 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
-import java.io.Serializable;
 
 /**
- * <p>
- * 
- * </p>
- *
- * @author ${author}
- * @since 2024-03-16
+ * @author yinjunbiao
+ * @version 1.0
+ * @date 2024/3/26
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class FocusOnTemplate implements Serializable {
+@ApiModel(value="专注模板对象", description="修改可重复使用的专注任务")
+public class UpdateFocusOnTemplateDTO {
 
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     @NotNull(message = "模板id不能为空",groups = Update.class)
+    @ApiModelProperty(value = "模板id", required = true)
     private Integer id;
 
     /**
@@ -46,12 +42,7 @@ public class FocusOnTemplate implements Serializable {
     @ApiModelProperty(value = "专注任务名", required = true)
     private String missionName;
 
-    /**
-     * 用户id
-     */
-    @TableField(select = false)
-    @Null(message = "用户id不需要传入",groups = Update.class)
-    private Integer userId;
+
 
     /**
      * 专注开始时间
@@ -70,32 +61,9 @@ public class FocusOnTemplate implements Serializable {
     private Integer focusDuration;
 
     /**
-     * 完成次数
-     */
-    @Null(message = "完成次数不需要传入",groups = Update.class)
-    private Integer completion;
-
-    /**
      * 备注
      */
     @ApiModelProperty(value = "备注")
     private String note;
 
-    @TableLogic
-    private Integer deleted;
-
-    public FocusOnTemplate(AddFocusOnTemplateDTO focusOnTemplateDTO) {
-        this.missionName = focusOnTemplateDTO.getMissionName();
-        this.focusStartTime = focusOnTemplateDTO.getFocusStartTime();
-        this.focusDuration = focusOnTemplateDTO.getFocusDuration();
-        this.note = focusOnTemplateDTO.getNote();
-    }
-
-    public FocusOnTemplate(UpdateFocusOnTemplateDTO updateFocusOnTemplateDTO) {
-        this.id = updateFocusOnTemplateDTO.getId();
-        this.missionName = updateFocusOnTemplateDTO.getMissionName();
-        this.focusStartTime = updateFocusOnTemplateDTO.getFocusStartTime();
-        this.focusDuration = updateFocusOnTemplateDTO.getFocusDuration();
-        this.note = updateFocusOnTemplateDTO.getNote();
-    }
 }
