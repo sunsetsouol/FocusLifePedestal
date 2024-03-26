@@ -26,7 +26,7 @@ import javax.validation.constraints.Pattern;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value="专注模板对象", description="修改可重复使用的专注任务")
+@ApiModel(value="更新专注模板对象", description="修改可重复使用的专注任务")
 public class UpdateFocusOnTemplateDTO {
 
     private static final long serialVersionUID = 1L;

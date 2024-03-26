@@ -42,7 +42,7 @@ public class FocusController {
 
     @PostMapping("/addTemplate")
     @ApiOperation("添加专注模板")
-    public Result addTemplate(@RequestBody @Validated @ApiParam("模板对象") AddFocusOnTemplateDTO addFocusOnTemplateDTO) {
+    public Result addTemplate(@RequestBody @Validated @ApiParam("添加模板对象") AddFocusOnTemplateDTO addFocusOnTemplateDTO) {
         return focusOnTemplateService.addTemplate(addFocusOnTemplateDTO);
     }
 
@@ -54,7 +54,7 @@ public class FocusController {
 
     @PostMapping("/updateTemplate")
     @ApiOperation("更新专注模板")
-    public Result updateTemplate(@RequestBody @ApiParam("模板对象")@Validated(Update.class) UpdateFocusOnTemplateDTO updateFocusOnTemplateDTO) {
+    public Result updateTemplate(@RequestBody @ApiParam("更新模板对象")@Validated UpdateFocusOnTemplateDTO updateFocusOnTemplateDTO) {
         return focusOnTemplateService.updateTemplate(updateFocusOnTemplateDTO);
     }
     @PostMapping("/addFocusEvent")
