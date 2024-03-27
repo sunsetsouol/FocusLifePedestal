@@ -16,6 +16,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 
 /**
  * @author yinjunbiao
@@ -50,7 +51,7 @@ public class UpdateFocusOnTemplateDTO {
     @Pattern(regexp = "^[0-2][0-9]:[0-5][0-9]:[0-5][0-9]$", message = "时间格式错误")
     @ApiModelProperty(value = "专注开始时间", required = true)
     @NotNull(message = "专注开始时间不能为空")
-    private String focusStartTime;
+    private LocalDateTime focusStartTime;
 
     /**
      * 专注持续时间（单位分）
