@@ -1,10 +1,7 @@
 package com.qgStudio.pedestal.entity.dto;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.qgStudio.pedestal.group.Update;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -14,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
@@ -33,7 +29,7 @@ public class UpdateFocusOnTemplateDTO {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
-    @NotNull(message = "模板id不能为空",groups = Update.class)
+    @NotNull(message = "模板id不能为空")
     @ApiModelProperty(value = "模板id", required = true)
     private Integer id;
 

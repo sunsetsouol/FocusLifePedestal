@@ -6,8 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.qgStudio.pedestal.entity.dto.AddFocusOnTemplateDTO;
 import com.qgStudio.pedestal.entity.dto.UpdateFocusOnTemplateDTO;
-import com.qgStudio.pedestal.group.Update;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,7 +36,7 @@ public class FocusOnTemplate implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
-    @NotNull(message = "模板id不能为空",groups = Update.class)
+    @NotNull(message = "模板id不能为空")
     private Integer id;
 
     /**
@@ -51,7 +49,7 @@ public class FocusOnTemplate implements Serializable {
      * 用户id
      */
     @TableField(select = false)
-    @Null(message = "用户id不需要传入",groups = Update.class)
+    @Null(message = "用户id不需要传入")
     private Integer userId;
 
     /**
@@ -73,7 +71,7 @@ public class FocusOnTemplate implements Serializable {
     /**
      * 完成次数
      */
-    @Null(message = "完成次数不需要传入",groups = Update.class)
+    @Null(message = "完成次数不需要传入")
     private Integer completion;
 
     /**

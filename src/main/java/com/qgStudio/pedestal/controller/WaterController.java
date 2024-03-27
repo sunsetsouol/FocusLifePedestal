@@ -2,8 +2,8 @@ package com.qgStudio.pedestal.controller;
 
 import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
 import com.qgStudio.pedestal.entity.po.WaterIntake;
-import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.IntegerVo;
+import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.WaterIntakeGetRangeVo;
 import com.qgStudio.pedestal.entity.vo.WaterIntakeGetVo;
 import com.qgStudio.pedestal.service.IWaterIntakeService;
@@ -13,7 +13,10 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 

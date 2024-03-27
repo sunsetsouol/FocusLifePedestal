@@ -1,18 +1,12 @@
 package com.qgStudio.pedestal.schedule;
 
-import com.alibaba.fastjson2.JSON;
 import com.qgStudio.pedestal.mqtt.MqttConfiguration;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author yinjunbiao

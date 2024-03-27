@@ -1,6 +1,7 @@
 package com.qgStudio.pedestal.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qgStudio.pedestal.constant.RedisConstants;
 import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
 import com.qgStudio.pedestal.entity.dto.AddFocusOnTemplateDTO;
@@ -11,12 +12,12 @@ import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.ResultStatusEnum;
 import com.qgStudio.pedestal.mapper.FocusOnTemplateMapper;
 import com.qgStudio.pedestal.service.IFocusOnTemplateService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,7 +49,7 @@ public class FocusOnTemplateServiceImpl extends ServiceImpl<FocusOnTemplateMappe
         focusOnTemplate.setUserId(userId);
 
         if (save(focusOnTemplate)) {
-            stringRedisTemplate.opsForZSet().add(RedisConstants.USER_FOCUS_TEMPLATE + userId, String.valueOf(focusOnTemplate.getId()), Integer.valueOf(focusOnTemplate.getFocusStartTime().replace(":","")));
+            stringRedisTemplate.opsForZSet().add(RedisConstants.USER_FOCUS_TEMPLATE + userId, String.valueOf(focusOnTemplate.getId()), focusOnTemplate.getFocusStartTime().toEpochSecond(ZoneOffset.ofHours(8)));
         }
         return Result.success();
     }
