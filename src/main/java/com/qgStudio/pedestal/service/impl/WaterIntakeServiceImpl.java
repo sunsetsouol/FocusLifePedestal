@@ -58,6 +58,7 @@ public class WaterIntakeServiceImpl extends ServiceImpl<WaterIntakeMapper, Water
                     } else {
                         waterIntakeMapper.intake(intakeWater,userId,now);
                     }
+                    userMapper.increaseWaterIntake(userId, intakeWater);
                 } finally {
                     lock.unlock();
                 }
@@ -79,7 +80,14 @@ public class WaterIntakeServiceImpl extends ServiceImpl<WaterIntakeMapper, Water
         waterIntakeLambdaQueryWrapper.eq(WaterIntake::getUserId, userId)
                 .eq(WaterIntake::getIntakeDate, time)
                 .select(WaterIntake::getIntakeReal, WaterIntake::getIntakeTarget, WaterIntake::getIntakeDate);
-        return Result.success(ResultStatusEnum.SUCCESS, waterIntakeMapper.selectOne(waterIntakeLambdaQueryWrapper));
+        WaterIntake waterIntake = waterIntakeMapper.selectOne(waterIntakeLambdaQueryWrapper);
+        if (waterIntake == null) {
+            waterIntake = new WaterIntake();
+            waterIntake.setIntakeReal(0);
+            waterIntake.setIntakeTarget(userMapper.selectById(userId).getDefaultWaterIntake());
+            waterIntake.setIntakeDate(time);
+        }
+        return Result.success(ResultStatusEnum.SUCCESS,  waterIntake);
     }
 
     @Override

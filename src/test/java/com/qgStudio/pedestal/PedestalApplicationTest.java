@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * @author yinjunbiao
@@ -36,6 +37,7 @@ public class PedestalApplicationTest {
     private UserMapper userMapper;
     @Test
     public void contextLoads() {
+        System.out.println(new BCryptPasswordEncoder().encode("test"));
 //        FocusOnTemplate focusOnTemplate = focusOnTemplateMapper.selectById(8);
 //        focusOnTemplate.setFocusDuration(null);
 //        System.out.println(focusOnTemplateMapper.updateById(focusOnTemplate));

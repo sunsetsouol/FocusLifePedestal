@@ -6,6 +6,7 @@ import com.qgStudio.pedestal.entity.vo.IntegerVo;
 import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.WaterIntakeGetRangeVo;
 import com.qgStudio.pedestal.entity.vo.WaterIntakeGetVo;
+import com.qgStudio.pedestal.service.IUserService;
 import com.qgStudio.pedestal.service.IWaterIntakeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,10 +14,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,10 +28,12 @@ import java.util.List;
 @Api(tags = "摄水量")
 public class WaterController {
     private final IWaterIntakeService waterIntakeService;
+    private final IUserService userService;
 
     @Autowired
-    public WaterController(IWaterIntakeService waterIntakeService) {
+    public WaterController(IWaterIntakeService waterIntakeService, IUserService userService) {
         this.waterIntakeService = waterIntakeService;
+        this.userService = userService;
     }
 
     @PostMapping("/getIntake")
@@ -52,6 +52,13 @@ public class WaterController {
         return waterIntakeService.getRangeWaterIntake(id, waterIntakeGetRangeVo);
     }
 
+    @GetMapping("/getHistoryWaterIntake")
+    @ApiOperation(value = "获取历史摄水量", notes = "获取历史摄水量")
+    public Result<Integer> getHistoryWaterIntake() {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer id = userDetails.getUser().getId();
+        return userService.getHistoryWaterIntake(id);
+    }
 
     // 非移动接口
     @PostMapping("/addWater")

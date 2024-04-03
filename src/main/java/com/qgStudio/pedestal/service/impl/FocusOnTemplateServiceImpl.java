@@ -49,7 +49,7 @@ public class FocusOnTemplateServiceImpl extends ServiceImpl<FocusOnTemplateMappe
         focusOnTemplate.setUserId(userId);
 
         if (save(focusOnTemplate)) {
-            stringRedisTemplate.opsForZSet().add(RedisConstants.USER_FOCUS_TEMPLATE + userId, String.valueOf(focusOnTemplate.getId()), focusOnTemplate.getFocusStartTime().toEpochSecond(ZoneOffset.ofHours(8)));
+            stringRedisTemplate.opsForZSet().add(RedisConstants.USER_FOCUS_TEMPLATE + userId, String.valueOf(focusOnTemplate.getId()), Integer.valueOf(focusOnTemplate.getFocusStartTime().replace(":","")));
         }
         return Result.success();
     }
@@ -59,11 +59,7 @@ public class FocusOnTemplateServiceImpl extends ServiceImpl<FocusOnTemplateMappe
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Integer userId = userDetails.getUser().getId();
 
-        LambdaQueryWrapper<FocusOnTemplate> focusOnTemplateLambdaQueryWrapper
-                = new LambdaQueryWrapper<>();
-        focusOnTemplateLambdaQueryWrapper.eq(FocusOnTemplate::getId, templateId.getNumber())
-                .eq(FocusOnTemplate::getUserId, userId);
-        if (focusOnTemplateMapper.delete(focusOnTemplateLambdaQueryWrapper) == 1) {
+        if (focusOnTemplateMapper.logicDelete(templateId.getNumber(),userId) == 1) {
             stringRedisTemplate.opsForZSet().remove(RedisConstants.USER_FOCUS_TEMPLATE + userId, String.valueOf(templateId.getNumber()));
             return Result.success();
         }

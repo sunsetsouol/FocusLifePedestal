@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qgStudio.pedestal.constant.RedisConstants;
 import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
 import com.qgStudio.pedestal.entity.po.User;
+import com.qgStudio.pedestal.entity.po.WaterIntake;
 import com.qgStudio.pedestal.entity.vo.IntegerVo;
 import com.qgStudio.pedestal.entity.vo.LoginUserVo;
 import com.qgStudio.pedestal.entity.vo.Result;
@@ -24,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -107,4 +109,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 .select(User::getDefaultReminderInterval, User::getDefaultWaterIntake));
         return Result.success(ResultStatusEnum.SUCCESS,new WaterReminderInfo(user.getDefaultWaterIntake(), user.getDefaultReminderInterval()));
     }
+
+    @Override
+    public Result<Integer> getHistoryFocusTime(Integer id) {
+        return Result.success(ResultStatusEnum.SUCCESS,userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, id).select(User::getTotalCompletionTime)).getTotalCompletionTime());
+    }
+
+    @Override
+    public Result<Integer> getHistoryWaterIntake(Integer id) {
+        return Result.success(ResultStatusEnum.SUCCESS,userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, id).select(User::getTotalWaterIntake)).getTotalWaterIntake());
+    }
+
 }

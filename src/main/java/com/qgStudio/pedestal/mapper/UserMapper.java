@@ -21,4 +21,10 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Update("update user set default_reminder_interval = #{number} where id = #{userId}")
     int setReminderInterval(Integer userId, Integer number);
+
+    @Update("update user set total_completion_time = total_completion_time + #{focusTime} where id = #{userId}")
+    void increaseFocusTime(Integer userId, Integer focusTime);
+
+    @Update("update user set total_water_intake = total_water_intake + #{intakeWater} where id = #{userId}")
+    void increaseWaterIntake(Integer userId, Integer intakeWater);
 }

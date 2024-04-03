@@ -39,7 +39,7 @@ public class AddFocusOnTemplateDTO {
      */
     @ApiModelProperty(value = "专注开始时间", required = true)
     @NotNull(message = "专注开始时间不能为空")
-    private LocalDateTime focusStartTime;
+    private String  focusStartTime;
 
     /**
      * 专注持续时间（单位分）

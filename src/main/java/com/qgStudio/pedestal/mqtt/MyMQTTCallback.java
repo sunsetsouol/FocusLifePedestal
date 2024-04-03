@@ -2,6 +2,7 @@ package com.qgStudio.pedestal.mqtt;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.qgStudio.pedestal.entity.dto.AddFocusOnEventDTO;
 import com.qgStudio.pedestal.entity.po.FocusOnEvent;
 import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
 import com.qgStudio.pedestal.entity.po.Pedestal;
@@ -107,7 +108,8 @@ public class MyMQTTCallback implements MqttCallbackExtended {
                 mqttClient.publish(mqttConfiguration.sendWaterTopic + equipmentNumber, JSON.toJSONBytes(waterIntake), 2, true);
             } else if(topic.equals(mqttConfiguration.focusEventTopic)){
                 //专注一次
-                FocusOnEvent focusOnEvent = JSON.parseObject(mqttMsg.getData(), FocusOnEvent.class);
+                AddFocusOnEventDTO focusOnEvent = JSON.parseObject(mqttMsg.getData(), AddFocusOnEventDTO.class);
+
                 focusOnEventService.addEvent(userPedestalMap.getUserId(), focusOnEvent);
                 Result<List<FocusOnTemplate>> templates = focusOnTemplateService.getTemplates(userPedestalMap.getUserId());
                 mqttClient.publish(mqttConfiguration.sendTemplateTopic + equipmentNumber, JSON.toJSONBytes(templates), 2, true);

@@ -2,10 +2,13 @@ package com.qgStudio.pedestal.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qgStudio.pedestal.entity.po.User;
+import com.qgStudio.pedestal.entity.po.WaterIntake;
 import com.qgStudio.pedestal.entity.vo.IntegerVo;
 import com.qgStudio.pedestal.entity.vo.LoginUserVo;
 import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.WaterReminderInfo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -29,4 +32,7 @@ public interface IUserService extends IService<User> {
 
     Result<WaterReminderInfo> getWaterReminderInfo(Integer userId);
 
+    Result<Integer> getHistoryWaterIntake(Integer id);
+
+    Result<Integer> getHistoryFocusTime(Integer id);
 }

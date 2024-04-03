@@ -60,4 +60,14 @@ public class User implements Serializable {
      * 提醒间隔
      */
     private Integer defaultReminderInterval;
+
+    /**
+     * 总专注时长
+     */
+    private Integer totalCompletionTime;
+
+    /**
+     * 总喝水量
+     */
+    private Integer totalWaterIntake;
 }

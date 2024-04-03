@@ -17,7 +17,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -58,7 +57,7 @@ public class FocusOnTemplate implements Serializable {
     @Pattern(regexp = "^[0-2][0-9]:[0-5][0-9]:[0-5][0-9]$", message = "时间格式错误")
     @ApiModelProperty(value = "专注开始时间", required = true)
     @NotNull(message = "专注开始时间不能为空")
-    private LocalDateTime focusStartTime;
+    private String focusStartTime;
 
     /**
      * 专注持续时间（单位分）
@@ -72,7 +71,14 @@ public class FocusOnTemplate implements Serializable {
      * 完成次数
      */
     @Null(message = "完成次数不需要传入")
+    @ApiModelProperty(value = "完成次数")
     private Integer completion;
+
+    /**
+     * 完成时长
+     */
+    @ApiModelProperty(value = "完成时长")
+    private Integer completionTotalTime;
 
     /**
      * 备注
