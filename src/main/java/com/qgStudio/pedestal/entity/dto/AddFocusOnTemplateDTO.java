@@ -7,8 +7,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
 /**
@@ -39,6 +41,7 @@ public class AddFocusOnTemplateDTO {
      */
     @ApiModelProperty(value = "专注开始时间", required = true)
     @NotNull(message = "专注开始时间不能为空")
+    @Pattern(regexp = "^[0-2][0-9]:[0-5][0-9]:[0-5][0-9]$", message = "时间格式错误")
     private String  focusStartTime;
 
     /**
@@ -46,6 +49,7 @@ public class AddFocusOnTemplateDTO {
      */
     @ApiModelProperty(value = "专注持续时间（单位分）", required = true)
     @Min(value = 1, message = "专注持续时间必须大于0")
+    @Max(value = Integer.MAX_VALUE, message = "专注持续时间过长")
     @NotNull(message = "专注持续时间不能为空")
     private Integer focusDuration;
 

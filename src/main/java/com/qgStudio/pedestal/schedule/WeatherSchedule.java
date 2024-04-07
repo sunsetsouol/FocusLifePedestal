@@ -26,7 +26,9 @@ public class WeatherSchedule {
         try {
             String forObject = restTemplate.getForObject("https://restapi.amap.com/v3/weather/weatherInfo?" +
                     "city=440100&extensions=base&output=JSON&key=153065d65dd4149fa379f8414682642a", String.class);
-            mqttClient.publish(mqttConfiguration.getWeatherTopic(),forObject.getBytes(),2,true);
+            if (mqttClient.isConnected()){
+                mqttClient.publish(mqttConfiguration.getWeatherTopic(),forObject.getBytes(),2,true);
+            }
         } catch (MqttException e) {
             e.printStackTrace();
         }
