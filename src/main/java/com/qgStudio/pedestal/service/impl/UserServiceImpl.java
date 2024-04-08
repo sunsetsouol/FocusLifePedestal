@@ -13,6 +13,7 @@ import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.ResultStatusEnum;
 import com.qgStudio.pedestal.entity.vo.WaterReminderInfo;
 import com.qgStudio.pedestal.mapper.UserMapper;
+import com.qgStudio.pedestal.mapper.WaterIntakeMapper;
 import com.qgStudio.pedestal.service.IUserService;
 import com.qgStudio.pedestal.utils.JwtUtils;
 import com.qgStudio.pedestal.utils.RedisCache;
@@ -24,8 +25,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,12 +44,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final RedisCache redisCache;
+    private final WaterIntakeMapper waterIntakeMapper;
     @Autowired
-    public UserServiceImpl(UserMapper userMapper, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RedisCache redisCache) {
+    public UserServiceImpl(UserMapper userMapper, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RedisCache redisCache, WaterIntakeMapper waterIntakeMapper) {
         this.userMapper = userMapper;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.redisCache = redisCache;
+        this.waterIntakeMapper = waterIntakeMapper;
     }
 
     @Override
@@ -88,9 +91,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public Result setIntake(IntegerVo intake) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Integer userId = userDetails.getUser().getId();
+//        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        Integer userId = userDetails.getUser().getId();
+        Integer userId = 3;
         userMapper.setIntake(userId, intake.getNumber());
+        WaterIntake waterIntake = new WaterIntake();
+        waterIntake.setIntakeTarget(intake.getNumber());
+        LambdaQueryWrapper<WaterIntake> waterIntakeLambdaQueryWrapper = new LambdaQueryWrapper<WaterIntake>()
+                .eq(WaterIntake::getUserId, userId)
+                .eq(WaterIntake::getIntakeDate, LocalDate.now());
+        waterIntakeMapper.update(waterIntake,waterIntakeLambdaQueryWrapper);
         return Result.success();
     }
 
