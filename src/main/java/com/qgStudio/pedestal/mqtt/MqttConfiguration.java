@@ -47,6 +47,8 @@ public class MqttConfiguration {
     String sendWaterTopic;
     @Value("${mqtt.weatherTopic}")
     String weatherTopic;
+    @Value("${mqtt.timeTopic}")
+    String timeTopic;
 //    @Value("${mqtt.topic3}")
 //    String topic3;
 //    @Value("${mqtt.topic4}")

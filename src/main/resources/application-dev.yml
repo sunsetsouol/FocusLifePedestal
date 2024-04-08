@@ -53,7 +53,7 @@ mqtt:
   username: test
   password: test
   qos: 2
-  clientId: mqasdasdasdasdasdasaa #ClientId_local必须唯一 比如你已经定了叫ABC  那你就一直叫ABC  其他地方就不要使用ABC了
+  clientId: mqasdasdasdasdasdasdasaa #ClientId_local必须唯一 比如你已经定了叫ABC  那你就一直叫ABC  其他地方就不要使用ABC了
   timeout: 10
   keepalive: 20
   focusEventTopic: /Focus_Life/focusEvent           #任务完成后发送的topic
@@ -63,3 +63,4 @@ mqtt:
   sendTemplateTopic: /Focus_Life/sendTemplate/      #接收任务模板情况的topic
   sendWaterTopic: /Focus_Life/sendWater/            #接收今日喝水情况的topic
   weatherTopic: /Focus_Life/weather                 #接收天气情况的topic
+  timeTopic: /Focus_Life/time                       #接收天气情况的topic
