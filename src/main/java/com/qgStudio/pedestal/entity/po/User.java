@@ -2,11 +2,7 @@ package com.qgStudio.pedestal.entity.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -16,7 +12,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author ${author}
- * @since 2024-03-16
+ * @since 2024-04-15
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -55,7 +51,6 @@ public class User implements Serializable {
      */
     private Integer defaultWaterIntake;
 
-
     /**
      * 提醒间隔
      */
@@ -70,4 +65,8 @@ public class User implements Serializable {
      * 总喝水量
      */
     private Integer totalWaterIntake;
+
+    private String uid;
+
+
 }

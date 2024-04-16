@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.qgStudio.pedestal.entity.dto.AddFocusOnTemplateDTO;
 import com.qgStudio.pedestal.entity.dto.UpdateFocusOnTemplateDTO;
 import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
-import com.qgStudio.pedestal.entity.vo.IntegerVo;
+import com.qgStudio.pedestal.entity.dto.IntegerDTO;
 import com.qgStudio.pedestal.entity.vo.Result;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public interface IFocusOnTemplateService extends IService<FocusOnTemplate> {
      */
     Result addTemplate(AddFocusOnTemplateDTO focusOnTemplate);
 
-    Result deleteTemplate(IntegerVo templateId);
+    Result deleteTemplate(IntegerDTO templateId);
 
     Result<List<FocusOnTemplate>> getTemplates(Integer userId);
 

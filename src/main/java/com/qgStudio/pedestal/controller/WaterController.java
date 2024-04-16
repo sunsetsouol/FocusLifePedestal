@@ -2,7 +2,7 @@ package com.qgStudio.pedestal.controller;
 
 import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
 import com.qgStudio.pedestal.entity.po.WaterIntake;
-import com.qgStudio.pedestal.entity.vo.IntegerVo;
+import com.qgStudio.pedestal.entity.dto.IntegerDTO;
 import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.WaterIntakeGetRangeVo;
 import com.qgStudio.pedestal.entity.vo.WaterIntakeGetVo;
@@ -62,9 +62,9 @@ public class WaterController {
 
     // 非移动接口
     @PostMapping("/addWater")
-    public Result addWater(@RequestBody @Validated IntegerVo integerVo) {
+    public Result addWater(@RequestBody @Validated IntegerDTO integerDTO) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Integer id = userDetails.getUser().getId();
-        return waterIntakeService.addWaterIntake(id, integerVo.getNumber());
+        return waterIntakeService.addWaterIntake(id, integerDTO.getNumber());
     }
 }

@@ -1,12 +1,11 @@
 package com.qgStudio.pedestal.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qgStudio.pedestal.entity.dto.DealFriendApplyDTO;
+import com.qgStudio.pedestal.entity.dto.IntegerDTO;
+import com.qgStudio.pedestal.entity.dto.LoginUserDTO;
 import com.qgStudio.pedestal.entity.po.User;
-import com.qgStudio.pedestal.entity.po.WaterIntake;
-import com.qgStudio.pedestal.entity.vo.IntegerVo;
-import com.qgStudio.pedestal.entity.vo.LoginUserVo;
-import com.qgStudio.pedestal.entity.vo.Result;
-import com.qgStudio.pedestal.entity.vo.WaterReminderInfo;
+import com.qgStudio.pedestal.entity.vo.*;
 
 import java.util.List;
 
@@ -20,19 +19,29 @@ import java.util.List;
  */
 public interface IUserService extends IService<User> {
 
-    Result login(LoginUserVo loginUserVo);
+    Result login(LoginUserDTO loginUserDTO);
 
-    Result register(LoginUserVo loginUserVo);
+    Result register(LoginUserDTO loginUserDTO);
 
     Result getCode(String email);
 
-    Result setIntake(IntegerVo intake);
+    Result setIntake(IntegerDTO intake);
 
-    Result setReminderInterval(IntegerVo reminderInterval);
+    Result setReminderInterval(IntegerDTO reminderInterval);
 
     Result<WaterReminderInfo> getWaterReminderInfo(Integer userId);
 
     Result<Integer> getHistoryWaterIntake(Integer id);
 
     Result<Integer> getHistoryFocusTime(Integer id);
+
+    Result<List<UserVo>> getByUId(String uid);
+
+    Result addFriend(Integer userId, String uid);
+
+    List<UserVo> getFriendApply(Integer userId);
+
+    Result dealFriendApply(Integer userId, DealFriendApplyDTO dealFriendApplyDTO);
+
+    Result<List<UserVo>> searchMyFriends(Integer userId);
 }

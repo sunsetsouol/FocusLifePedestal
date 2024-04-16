@@ -7,7 +7,7 @@ import com.qgStudio.pedestal.entity.dto.LocalDateDTO;
 import com.qgStudio.pedestal.entity.dto.UpdateFocusOnTemplateDTO;
 import com.qgStudio.pedestal.entity.po.FocusOnEvent;
 import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
-import com.qgStudio.pedestal.entity.vo.IntegerVo;
+import com.qgStudio.pedestal.entity.dto.IntegerDTO;
 import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.service.IFocusOnEventService;
 import com.qgStudio.pedestal.service.IFocusOnTemplateService;
@@ -26,9 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -60,7 +57,7 @@ public class FocusController {
 
     @PostMapping("/deleteTemplate")
     @ApiOperation("删除专注模板")
-    public Result deleteTemplate(@RequestBody @Validated @ApiParam("模板id") IntegerVo templateId) {
+    public Result deleteTemplate(@RequestBody @Validated @ApiParam("模板id") IntegerDTO templateId) {
         return focusOnTemplateService.deleteTemplate(templateId);
     }
 

@@ -3,21 +3,28 @@ package com.qgStudio.pedestal.service.impl;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qgStudio.pedestal.constant.Constants;
 import com.qgStudio.pedestal.constant.RedisConstants;
 import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
+import com.qgStudio.pedestal.entity.dto.DealFriendApplyDTO;
+import com.qgStudio.pedestal.entity.dto.IntegerDTO;
+import com.qgStudio.pedestal.entity.dto.LoginUserDTO;
+import com.qgStudio.pedestal.entity.node.UserNode;
+import com.qgStudio.pedestal.entity.po.Friendship;
 import com.qgStudio.pedestal.entity.po.User;
 import com.qgStudio.pedestal.entity.po.WaterIntake;
-import com.qgStudio.pedestal.entity.vo.IntegerVo;
-import com.qgStudio.pedestal.entity.vo.LoginUserVo;
-import com.qgStudio.pedestal.entity.vo.Result;
-import com.qgStudio.pedestal.entity.vo.ResultStatusEnum;
-import com.qgStudio.pedestal.entity.vo.WaterReminderInfo;
+import com.qgStudio.pedestal.entity.vo.*;
+import com.qgStudio.pedestal.mapper.FriendshipMapper;
 import com.qgStudio.pedestal.mapper.UserMapper;
 import com.qgStudio.pedestal.mapper.WaterIntakeMapper;
+import com.qgStudio.pedestal.repository.node.UserNodeRepository;
+import com.qgStudio.pedestal.repository.relation.FriendRelationRepository;
 import com.qgStudio.pedestal.service.IUserService;
 import com.qgStudio.pedestal.utils.JwtUtils;
 import com.qgStudio.pedestal.utils.RedisCache;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.qgStudio.pedestal.utils.UUIDUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,8 +33,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -38,6 +49,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2024-03-16
  */
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     private final UserMapper userMapper;
@@ -45,18 +57,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private final PasswordEncoder passwordEncoder;
     private final RedisCache redisCache;
     private final WaterIntakeMapper waterIntakeMapper;
-    @Autowired
-    public UserServiceImpl(UserMapper userMapper, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, RedisCache redisCache, WaterIntakeMapper waterIntakeMapper) {
-        this.userMapper = userMapper;
-        this.authenticationManager = authenticationManager;
-        this.passwordEncoder = passwordEncoder;
-        this.redisCache = redisCache;
-        this.waterIntakeMapper = waterIntakeMapper;
-    }
+    private final FriendshipMapper friendshipMapper;
+    private final UserNodeRepository userNodeRepository;
+    private final FriendRelationRepository friendRelationRepository;
 
     @Override
-    public Result login(LoginUserVo loginUserVo) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUserVo.getEmail(),loginUserVo.getPassword());
+    public Result login(LoginUserDTO loginUserDTO) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUserDTO.getEmail(), loginUserDTO.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         if (authenticate == null) {
             return Result.fail(ResultStatusEnum.LOGIN_FAIL);
@@ -70,13 +77,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Result register(LoginUserVo loginUserVo) {
+    public Result register(LoginUserDTO loginUserDTO) {
         User user = User.builder()
-                .email(loginUserVo.getEmail())
-                .password(passwordEncoder.encode(loginUserVo.getPassword()))
+                .email(loginUserDTO.getEmail())
+                .password(passwordEncoder.encode(loginUserDTO.getPassword()))
+                .uid(UUIDUtils.getRandomNumStr(32))
                 .build();
         try {
             userMapper.insert(user);
+            UserNode userNode = new UserNode();
+            userNode.setUserId(user.getId());
+            userNodeRepository.save(userNode);
             return Result.success(ResultStatusEnum.REGISTER_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,7 +101,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Result setIntake(IntegerVo intake) {
+    public Result setIntake(IntegerDTO intake) {
 //        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        Integer userId = userDetails.getUser().getId();
         Integer userId = 3;
@@ -105,7 +116,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Result setReminderInterval(IntegerVo reminderInterval) {
+    public Result setReminderInterval(IntegerDTO reminderInterval) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Integer userId = userDetails.getUser().getId();
         userMapper.setReminderInterval(userId, reminderInterval.getNumber());
@@ -130,4 +141,71 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return Result.success(ResultStatusEnum.SUCCESS,userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, id).select(User::getTotalWaterIntake)).getTotalWaterIntake());
     }
 
+    @Override
+    public Result<List<UserVo>> getByUId(String uid) {
+        return Result.success(ResultStatusEnum.SUCCESS, userMapper.selectList(new LambdaQueryWrapper<User>().eq(User::getUid,uid)).stream().map(UserVo::new).collect(Collectors.toList()));
+    }
+
+    @Override
+    public Result addFriend(Integer userId, String uid) {
+        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUid, uid));
+
+        if (!Objects.isNull(friendRelationRepository.findByUserIds(userId, user.getId()))) {
+            return Result.fail(ResultStatusEnum.ALREADY_FRIEND);
+        }
+        Friendship friendship = new Friendship();
+        friendship.setFromId(userId);
+        friendship.setToId(user.getId());
+        friendship.setCreateTime(LocalDateTime.now());
+        friendship.setExpirationTime(LocalDateTime.now().plusDays(Constants.VALIDITY_TIME));
+        try {
+            friendshipMapper.insert(friendship);
+        } catch (DuplicateKeyException e) {
+            friendship = friendshipMapper.selectOne(new LambdaQueryWrapper<Friendship>().eq(Friendship::getFromId, userId).eq(Friendship::getToId, user.getId()));
+            friendship.setCreateTime(LocalDateTime.now());
+            friendship.setExpirationTime(LocalDateTime.now().plusDays(Constants.VALIDITY_TIME));
+            friendshipMapper.updateById(friendship);
+        }
+        return Result.success(ResultStatusEnum.SUCCESS);
+    }
+
+    @Override
+    public List<UserVo> getFriendApply(Integer userId) {
+        List<Friendship> friendships = friendshipMapper.selectList(new LambdaQueryWrapper<Friendship>().eq(Friendship::getToId, userId));
+        return friendships.stream().map(friendship -> {
+            User user = userMapper.selectById(friendship.getFromId());
+            return new UserVo(user);
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Result dealFriendApply(Integer userId, DealFriendApplyDTO dealFriendApplyDTO) {
+
+        Friendship friendship = friendshipMapper.selectById(dealFriendApplyDTO.getFriendId());
+        if (Objects.isNull(friendship)) {
+            return Result.fail(ResultStatusEnum.FRIEND_APPLY_NOT_EXIST);
+        }
+        if(!userId.equals(friendship.getToId())){
+            return Result.fail(ResultStatusEnum.NOT_AUTHORIZATION);
+        }
+        if(!friendship.getStatus().equals(Friendship.statusType.APPLICATION.getStatus())){
+            return Result.fail(ResultStatusEnum.ALREADY_DEAL);
+        }
+        if(friendship.getExpirationTime().isBefore(LocalDateTime.now())){
+            return Result.fail(ResultStatusEnum.OVERDUE);
+        }
+        friendship.setStatus(DealFriendApplyDTO.OperatorNumber.parse(dealFriendApplyDTO.getOperatorNumber()).getStatus());
+        friendshipMapper.updateById(friendship);
+        if (DealFriendApplyDTO.OperatorNumber.parse(dealFriendApplyDTO.getOperatorNumber()).equals(Friendship.statusType.AGREE)) {
+            friendRelationRepository.addFriendship(userId, friendship.getFromId());
+        }
+        return Result.success(ResultStatusEnum.SUCCESS);
+    }
+
+    @Override
+    public Result<List<UserVo>> searchMyFriends(Integer userId) {
+        List<UserNode> userNodes = userNodeRepository.selectById(userId);
+        List<Integer> ids = userNodes.stream().map(UserNode::getUserId).collect(Collectors.toList());
+        return Result.success(ResultStatusEnum.SUCCESS, userMapper.selectList(new LambdaQueryWrapper<User>().in(User::getId, ids).select(User::getId, User::getUid, User::getEmail)).stream().map(UserVo::new).collect(Collectors.toList()));
+    }
 }

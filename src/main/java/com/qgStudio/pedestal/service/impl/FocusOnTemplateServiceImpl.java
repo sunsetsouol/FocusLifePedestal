@@ -10,7 +10,7 @@ import com.qgStudio.pedestal.entity.dto.UpdateFocusOnTemplateDTO;
 import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
 import com.qgStudio.pedestal.entity.po.Pedestal;
 import com.qgStudio.pedestal.entity.po.UserPedestalMap;
-import com.qgStudio.pedestal.entity.vo.IntegerVo;
+import com.qgStudio.pedestal.entity.dto.IntegerDTO;
 import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.ResultStatusEnum;
 import com.qgStudio.pedestal.mapper.FocusOnTemplateMapper;
@@ -83,7 +83,7 @@ public class FocusOnTemplateServiceImpl extends ServiceImpl<FocusOnTemplateMappe
     }
 
     @Override
-    public Result deleteTemplate(IntegerVo templateId) {
+    public Result deleteTemplate(IntegerDTO templateId) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Integer userId = userDetails.getUser().getId();
 

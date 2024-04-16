@@ -33,6 +33,11 @@ spring:
     username: 2824687171@qq.com
     password: wfwiwtwpqdjsdcfi
     default-encoding: UTF-8
+  data:
+    neo4j:
+      uri: bolt://47.120.32.160:7687
+      password: 123456
+      username: neo4j
 
 logging:
   level:
@@ -40,7 +45,6 @@ logging:
       springframework:
         boot:
           autoconfigure: ERROR
-
 mybatis-plus:
   global-config:
     db-config:
@@ -53,7 +57,7 @@ mqtt:
   username: test
   password: test
   qos: 2
-  clientId: mqasdasdasdasdasdasdasaa #ClientId_local必须唯一 比如你已经定了叫ABC  那你就一直叫ABC  其他地方就不要使用ABC了
+  clientId: mqasaaaaasdsdasdasaa #ClientId_local必须唯一 比如你已经定了叫ABC  那你就一直叫ABC  其他地方就不要使用ABC了
   timeout: 10
   keepalive: 20
   focusEventTopic: /Focus_Life/focusEvent           #任务完成后发送的topic

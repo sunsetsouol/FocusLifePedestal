@@ -1,4 +1,4 @@
-package com.qgStudio.pedestal.entity.vo;
+package com.qgStudio.pedestal.entity.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class IntegerVo {
+public class IntegerDTO {
     @NotNull(message = "参数不能为空")
     private Integer number;
 }

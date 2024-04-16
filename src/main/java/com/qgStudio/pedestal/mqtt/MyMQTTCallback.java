@@ -3,12 +3,11 @@ package com.qgStudio.pedestal.mqtt;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qgStudio.pedestal.entity.dto.AddFocusOnEventDTO;
-import com.qgStudio.pedestal.entity.po.FocusOnEvent;
 import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
 import com.qgStudio.pedestal.entity.po.Pedestal;
 import com.qgStudio.pedestal.entity.po.UserPedestalMap;
 import com.qgStudio.pedestal.entity.po.WaterIntake;
-import com.qgStudio.pedestal.entity.vo.IntegerVo;
+import com.qgStudio.pedestal.entity.dto.IntegerDTO;
 import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.mapper.PedestalMapper;
 import com.qgStudio.pedestal.mapper.UserPedestalMapMapper;
@@ -102,8 +101,8 @@ public class MyMQTTCallback implements MqttCallbackExtended {
         try {
             //喝水
             if(topic.equals(mqttConfiguration.addWaterTopic)){
-                IntegerVo integerVo = JSON.parseObject(mqttMsg.getData(), IntegerVo.class);
-                waterIntakeService.addWaterIntake(userPedestalMap.getUserId(), integerVo.getNumber());
+                IntegerDTO integerDTO = JSON.parseObject(mqttMsg.getData(), IntegerDTO.class);
+                waterIntakeService.addWaterIntake(userPedestalMap.getUserId(), integerDTO.getNumber());
                 Result<WaterIntake> waterIntake = waterIntakeService.getWaterIntake(userPedestalMap.getUserId(), LocalDate.now());
                 mqttClient.publish(mqttConfiguration.sendWaterTopic + equipmentNumber, JSON.toJSONBytes(waterIntake), 2, true);
             } else if(topic.equals(mqttConfiguration.focusEventTopic)){

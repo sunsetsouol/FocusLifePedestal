@@ -2,13 +2,14 @@ package com.qgStudio.pedestal.entity.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -22,7 +23,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
-public class WaterIntake implements Serializable {
+public class UserSpace implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,25 +36,35 @@ public class WaterIntake implements Serializable {
     private Integer userId;
 
     /**
-     * 日期
+     * 空间id
      */
-    private LocalDate intakeDate;
+    private Integer spaceId;
 
     /**
-     * 目标摄水量
+     * 专注事件id（0表示非专注）
      */
-    private Integer intakeTarget;
+    private Integer eventId;
 
     /**
-     * 实际摄水量
+     * 上一次专注开始时间
      */
-    private Integer intakeReal;
+    private LocalDateTime focusStartTime;
+
+    /**
+     * 空间专注次数
+     */
+    private Integer focusTimes;
+
+    /**
+     * 空间总专注时长
+     */
+    private Integer totalFocusTime;
+
+    /**
+     * 逻辑删除
+     */
+    @TableLogic(delval = "NULL")
+    private Integer deleted;
 
 
-    public WaterIntake(Integer userId, LocalDate now, Integer defaultWaterIntake, Integer intakeWater) {
-        this.userId = userId;
-        this.intakeDate = now;
-        this.intakeTarget = defaultWaterIntake;
-        this.intakeReal = intakeWater;
-    }
 }
