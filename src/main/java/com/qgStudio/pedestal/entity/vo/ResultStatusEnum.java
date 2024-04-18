@@ -40,7 +40,9 @@ public enum ResultStatusEnum {
     SPACE_NOT_EXIT(604, "空间不存在"),
     INVITE_NOT_EXIT(605, "邀请不存在"),
     OWNER_CANNOT_QUIT(606, "空间所有者不能直接退出空间"),
-    USER_NOT_IN_SPACE(607, "空间不存在该用户");
+    USER_NOT_IN_SPACE(607, "空间不存在该用户"),
+    USER_NOT_EXIST(608, "用户不存在")
+    ;
 
     private final Integer code;
 

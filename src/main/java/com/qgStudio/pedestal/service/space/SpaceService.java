@@ -15,7 +15,7 @@ import java.util.List;
  * @date 2024/4/16
  */
 public interface SpaceService {
-    Result<Boolean> createSpace(Integer userId, SpaceCreateDTO spaceCreateDTO);
+    SpaceVO createSpace(Integer userId, SpaceCreateDTO spaceCreateDTO);
 
     Result<Boolean> deleteSpace(Integer userId, Integer spaceId);
 
@@ -25,7 +25,7 @@ public interface SpaceService {
 
     Result<Boolean> quitSpace(Integer userId, Integer spaceId);
 
-    Result<SpaceInviteVO> invite(Integer userId, Long spaceId);
+    SpaceInviteVO invite(Integer userId, Long spaceId);
 
     Result<Boolean> acceptInvite(Integer userId, Integer inviteId);
 

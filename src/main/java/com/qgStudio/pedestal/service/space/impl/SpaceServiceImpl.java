@@ -11,6 +11,7 @@ import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.ResultStatusEnum;
 import com.qgStudio.pedestal.entity.vo.space.SpaceInviteVO;
 import com.qgStudio.pedestal.entity.vo.space.SpaceUserVO;
+import com.qgStudio.pedestal.entity.vo.space.SpaceVO;
 import com.qgStudio.pedestal.exception.ServiceException;
 import com.qgStudio.pedestal.mapper.SpaceInviteMapper;
 import com.qgStudio.pedestal.mapper.SpaceMapper;
@@ -39,7 +40,7 @@ public class SpaceServiceImpl implements SpaceService {
     private final UserMapper userMapper;
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Result<Boolean> createSpace(Integer userId, SpaceCreateDTO spaceCreateDTO) {
+    public SpaceVO createSpace(Integer userId, SpaceCreateDTO spaceCreateDTO) {
 
         validateNotSpace(userId);
 
@@ -57,7 +58,7 @@ public class SpaceServiceImpl implements SpaceService {
 //            }
 //        }
         userSpaceMapper.insert(ownerSpaceMap);
-        return Result.success(ResultStatusEnum.SUCCESS);
+        return new SpaceVO(space);
     }
 
     @Override
@@ -96,17 +97,23 @@ public class SpaceServiceImpl implements SpaceService {
     }
 
     @Override
-    public Result<SpaceInviteVO> invite(Integer userId, Long spaceId) {
+    public SpaceInviteVO invite(Integer userId, Long spaceId) {
         Space space = spaceMapper.selectById(spaceId);
         if (Objects.isNull(space)) {
             throw new ServiceException(ResultStatusEnum.SPACE_NOT_EXIT);
+        }
+        User user = userMapper.selectById(userId);
+        if (Objects.isNull(user)) {
+            throw new ServiceException(ResultStatusEnum.USER_NOT_EXIST);
+        }
+        if (userSpaceMapper.selectCount(new LambdaQueryWrapper<UserSpace>().eq(UserSpace::getUserId, userId).eq(UserSpace::getSpaceId, spaceId))==0) {
+            throw new ServiceException(ResultStatusEnum.NOT_AUTHORIZATION);
         }
         SpaceInvite spaceInvite = new SpaceInvite();
         spaceInvite.setSpaceId(spaceId);
         spaceInvite.setInviterId(userId);
         spaceInviteMapper.insert(spaceInvite);
-        User user = userMapper.selectById(userId);
-        return Result.success(new SpaceInviteVO(spaceInvite.getId(),user, space));
+        return new SpaceInviteVO(spaceInvite.getId(),user, space);
     }
 
     @Override

@@ -17,6 +17,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @ApiModel("用户信息")
 public class UserVo {
+
+    /**
+     * 用户id
+     */
+    private Integer id;
     /**
      * 昵称
      */
@@ -41,6 +46,7 @@ public class UserVo {
     private String uid;
 
     public UserVo(User user) {
+        this.id = user.getId();
         this.name = user.getName();
         this.headImage = user.getHeadImage();
         this.email = user.getEmail();

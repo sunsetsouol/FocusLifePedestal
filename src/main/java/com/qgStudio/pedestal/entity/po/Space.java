@@ -80,8 +80,10 @@ public class Space implements Serializable {
     private LocalDateTime updateTime;
 
     public Space(SpaceCreateDTO spaceCreateDTO, Integer userId) {
-        this.name = spaceCreateDTO.getName();
-        this.description = spaceCreateDTO.getDescription();
+        if (spaceCreateDTO != null) {
+            this.name = spaceCreateDTO.getName();
+            this.description = spaceCreateDTO.getDescription();
+        }
         this.ownerUserId = userId;
         this.createTime = LocalDateTime.now();
     }

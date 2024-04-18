@@ -6,6 +6,7 @@ import com.qgStudio.pedestal.entity.dto.space.SpaceRemoveMemberDTO;
 import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.space.SpaceInviteVO;
 import com.qgStudio.pedestal.entity.vo.space.SpaceUserVO;
+import com.qgStudio.pedestal.entity.vo.space.SpaceVO;
 import com.qgStudio.pedestal.service.space.SpaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,10 +33,10 @@ public class SpaceController {
      * @return 创建结果
      */
     @PostMapping("/create")
-    public Result<Boolean> createSpace(@RequestBody SpaceCreateDTO spaceCreateDTO) {
+    public Result<SpaceVO> createSpace(@RequestBody SpaceCreateDTO spaceCreateDTO) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Integer userId = userDetails.getUser().getId();
-        return spaceService.createSpace(userId, spaceCreateDTO);
+        return Result.success(spaceService.createSpace(userId, spaceCreateDTO));
     }
 
     /**
@@ -88,7 +89,7 @@ public class SpaceController {
     public Result<SpaceInviteVO> inviteSpace(@RequestParam Long spaceId) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Integer userId = userDetails.getUser().getId();
-        return spaceService.invite(userId, spaceId);
+        return Result.success(spaceService.invite(userId, spaceId));
     }
 
     /**

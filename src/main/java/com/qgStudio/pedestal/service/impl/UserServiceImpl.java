@@ -203,6 +203,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public Result<List<UserVo>> searchMyFriends(Integer userId) {
         List<UserNode> userNodes = userNodeRepository.selectById(userId);
         List<Integer> ids = userNodes.stream().map(UserNode::getUserId).collect(Collectors.toList());
-        return Result.success(ResultStatusEnum.SUCCESS, userMapper.selectList(new LambdaQueryWrapper<User>().in(User::getId, ids).select(User::getId, User::getUid, User::getEmail)).stream().map(UserVo::new).collect(Collectors.toList()));
+        return Result.success(ResultStatusEnum.SUCCESS, userMapper.selectList(new LambdaQueryWrapper<User>().in(User::getId, ids).select(User::getId, User::getName, User::getHeadImage, User::getUid, User::getEmail)).stream().map(UserVo::new).collect(Collectors.toList()));
     }
 }
