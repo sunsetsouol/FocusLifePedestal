@@ -24,4 +24,7 @@ public class UserNode {
 
     @Property("userId")
     private Integer userId;
+
+    @Property("Uid")
+    private String uid;
 }

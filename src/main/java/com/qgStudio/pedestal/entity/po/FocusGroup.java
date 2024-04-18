@@ -2,6 +2,7 @@ package com.qgStudio.pedestal.entity.po;
 
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.Version;
+import com.qgStudio.pedestal.entity.dto.group.GroupCreateDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -38,6 +39,11 @@ public class FocusGroup implements Serializable {
     private String headImage;
 
     /**
+     * 群主的userId
+     */
+    private Integer ownerUserId;
+
+    /**
      * 群组描述
      */
     private String description;
@@ -60,4 +66,9 @@ public class FocusGroup implements Serializable {
     private Integer deleted;
 
 
+    public FocusGroup(Integer userId, GroupCreateDTO groupCreateDTO) {
+        this.ownerUserId = userId;
+        this.name = groupCreateDTO.getName();
+        this.description = groupCreateDTO.getDescription();
+    }
 }

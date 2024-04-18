@@ -67,4 +67,18 @@ public class UserSpace implements Serializable {
     private Integer deleted;
 
 
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    public UserSpace(Integer userId, Long spaceId) {
+        this.userId = userId;
+        this.spaceId = spaceId.intValue();
+     }
 }

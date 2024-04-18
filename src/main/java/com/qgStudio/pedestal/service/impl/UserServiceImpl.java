@@ -14,6 +14,7 @@ import com.qgStudio.pedestal.entity.po.Friendship;
 import com.qgStudio.pedestal.entity.po.User;
 import com.qgStudio.pedestal.entity.po.WaterIntake;
 import com.qgStudio.pedestal.entity.vo.*;
+import com.qgStudio.pedestal.entity.vo.friend.FriendApplyVO;
 import com.qgStudio.pedestal.mapper.FriendshipMapper;
 import com.qgStudio.pedestal.mapper.UserMapper;
 import com.qgStudio.pedestal.mapper.WaterIntakeMapper;
@@ -87,6 +88,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userMapper.insert(user);
             UserNode userNode = new UserNode();
             userNode.setUserId(user.getId());
+            userNode.setUid(user.getUid());
             userNodeRepository.save(userNode);
             return Result.success(ResultStatusEnum.REGISTER_SUCCESS);
         } catch (Exception e) {
@@ -101,10 +103,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Result setIntake(IntegerDTO intake) {
-//        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        Integer userId = userDetails.getUser().getId();
-        Integer userId = 3;
+    public Result setIntake(IntegerDTO intake, Integer userId) {
         userMapper.setIntake(userId, intake.getNumber());
         WaterIntake waterIntake = new WaterIntake();
         waterIntake.setIntakeTarget(intake.getNumber());
@@ -170,12 +169,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public List<UserVo> getFriendApply(Integer userId) {
-        List<Friendship> friendships = friendshipMapper.selectList(new LambdaQueryWrapper<Friendship>().eq(Friendship::getToId, userId));
-        return friendships.stream().map(friendship -> {
-            User user = userMapper.selectById(friendship.getFromId());
-            return new UserVo(user);
-        }).collect(Collectors.toList());
+    public List<FriendApplyVO> getFriendApply(Integer userId) {
+        List<FriendApplyVO> friendApplyVOS = friendshipMapper.selectApply(userId);
+        friendApplyVOS.forEach(FriendApplyVO::setStatus);
+        return friendApplyVOS;
     }
 
     @Override

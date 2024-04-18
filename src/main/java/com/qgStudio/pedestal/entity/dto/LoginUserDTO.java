@@ -1,4 +1,4 @@
-package com.qgStudio.pedestal.entity.vo;
+package com.qgStudio.pedestal.entity.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,7 +18,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Data
 @ApiModel("注册用户")
-public class LoginUserVo {
+public class LoginUserDTO {
     @ApiModelProperty(name = "邮箱", required = true)
     @Email
     @NotBlank(message = "邮箱不能为空")

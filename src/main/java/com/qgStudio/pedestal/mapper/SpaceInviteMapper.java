@@ -1,7 +1,7 @@
 package com.qgStudio.pedestal.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.qgStudio.pedestal.entity.po.FocusGroupInvite;
+import com.qgStudio.pedestal.entity.po.SpaceInvite;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2024-04-16
  */
 @Mapper
-public interface FocusGroupInviteMapper extends BaseMapper<FocusGroupInvite> {
+public interface SpaceInviteMapper extends BaseMapper<SpaceInvite> {
 
 }

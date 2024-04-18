@@ -6,6 +6,7 @@ import com.qgStudio.pedestal.entity.dto.IntegerDTO;
 import com.qgStudio.pedestal.entity.dto.LoginUserDTO;
 import com.qgStudio.pedestal.entity.po.User;
 import com.qgStudio.pedestal.entity.vo.*;
+import com.qgStudio.pedestal.entity.vo.friend.FriendApplyVO;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public interface IUserService extends IService<User> {
 
     Result getCode(String email);
 
-    Result setIntake(IntegerDTO intake);
+    Result setIntake(IntegerDTO intake, Integer userId);
 
     Result setReminderInterval(IntegerDTO reminderInterval);
 
@@ -39,7 +40,7 @@ public interface IUserService extends IService<User> {
 
     Result addFriend(Integer userId, String uid);
 
-    List<UserVo> getFriendApply(Integer userId);
+    List<FriendApplyVO> getFriendApply(Integer userId);
 
     Result dealFriendApply(Integer userId, DealFriendApplyDTO dealFriendApplyDTO);
 

@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
-public class FocusGroupInvite implements Serializable {
+public class SpaceInvite implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,19 +32,14 @@ public class FocusGroupInvite implements Serializable {
     private Integer inviterId;
 
     /**
-     * 群聊id
+     * 空间id
      */
-    private Integer groupId;
+    private Long spaceId;
 
     /**
      * 受邀请用户id
      */
     private Integer toUserId;
-
-    /**
-     * 状态（application，agree，disagree、overdue）
-     */
-    private String status;
 
     /**
      * 邀请时间

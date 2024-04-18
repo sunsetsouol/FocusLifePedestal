@@ -49,10 +49,6 @@ public class MqttConfiguration {
     String weatherTopic;
     @Value("${mqtt.timeTopic}")
     String timeTopic;
-//    @Value("${mqtt.topic3}")
-//    String topic3;
-//    @Value("${mqtt.topic4}")
-//    String topic4;
 
     @Bean
     public MqttClient mqttClient() throws MqttException {

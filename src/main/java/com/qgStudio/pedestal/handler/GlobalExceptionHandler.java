@@ -2,11 +2,14 @@ package com.qgStudio.pedestal.handler;
 
 import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.ResultStatusEnum;
+import com.qgStudio.pedestal.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 
 /**
@@ -55,5 +58,10 @@ public class GlobalExceptionHandler {
         return Result.fail(ResultStatusEnum.PARAMS_ERROR, e.getBindingResult().getFieldError().getDefaultMessage());
     }
 
+    @ExceptionHandler(ServiceException.class)
+    public Result<String> handleServiceException(ServiceException e, HttpServletRequest request) {
+        log.info("请求地址{}, 异常{}", request.getRequestURI(), e.getMessage());
+        return Result.fail(e.getCode(), e.getMessage());
+    }
 
 }

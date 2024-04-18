@@ -4,12 +4,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.Version;
+import com.qgStudio.pedestal.entity.dto.space.SpaceCreateDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -67,5 +69,20 @@ public class Space implements Serializable {
     @TableLogic(delval = "NULL")
     private Integer deleted;
 
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
 
+    /**
+     * 删除时间
+     */
+    private LocalDateTime updateTime;
+
+    public Space(SpaceCreateDTO spaceCreateDTO, Integer userId) {
+        this.name = spaceCreateDTO.getName();
+        this.description = spaceCreateDTO.getDescription();
+        this.ownerUserId = userId;
+        this.createTime = LocalDateTime.now();
+    }
 }

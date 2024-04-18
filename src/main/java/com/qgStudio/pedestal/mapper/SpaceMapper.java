@@ -3,6 +3,9 @@ package com.qgStudio.pedestal.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.qgStudio.pedestal.entity.po.Space;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Update;
+
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -15,4 +18,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SpaceMapper extends BaseMapper<Space> {
 
+    @Update("update space set deleted = null ,deleted_time = #{now} where id = #{spaceId} and owner_user_id = #{userId}")
+    void logicDelete(Integer spaceId, Integer userId, LocalDateTime now);
 }

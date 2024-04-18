@@ -38,11 +38,19 @@ public class Result<T> {
         return new Result<T>(statusEnum.code(), statusEnum.message(), data);
     }
 
+    public static <T> Result<T> success(T data){
+        return new Result<T>(ResultStatusEnum.SUCCESS.code(), ResultStatusEnum.SUCCESS.message(), data);
+    }
+
     public static <T> Result<T> fail(ResultStatusEnum statusEnum){
         return new Result<T>(statusEnum.code(), statusEnum.message(), null);
     }
 
     public static <T> Result<T> fail(ResultStatusEnum statusEnum, String message){
         return new Result<T>(statusEnum.code(), message,null);
+    }
+
+    public static <T> Result<T> fail(Integer code, String message){
+        return new Result<T>(code, message, null);
     }
 }
