@@ -57,7 +57,7 @@ mqtt:
   username: test
   password: test
   qos: 2
-  clientId: mqasaaaaasdsdasdasaa #ClientId_local必须唯一 比如你已经定了叫ABC  那你就一直叫ABC  其他地方就不要使用ABC了
+  clientId: mqasaaaaasdsdasdasdasdasaa #ClientId_local必须唯一 比如你已经定了叫ABC  那你就一直叫ABC  其他地方就不要使用ABC了
   timeout: 10
   keepalive: 20
   focusEventTopic: /Focus_Life/focusEvent           #任务完成后发送的topic

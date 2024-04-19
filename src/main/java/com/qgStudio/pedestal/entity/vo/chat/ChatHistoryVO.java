@@ -19,6 +19,10 @@ import java.time.LocalDateTime;
 public class ChatHistoryVO {
 
     /**
+     * 消息id
+     */
+    private Long id;
+    /**
      * 用户
      */
     private Integer userId;
@@ -39,6 +43,7 @@ public class ChatHistoryVO {
     private String type;
 
     public ChatHistoryVO(PrivateChatHistory privateChatHistory) {
+        this.id = privateChatHistory.getId();
         this.userId = privateChatHistory.getFromId();
         this.content = privateChatHistory.getContext();
         this.time = privateChatHistory.getCreateTime();
@@ -46,6 +51,7 @@ public class ChatHistoryVO {
     }
 
     public ChatHistoryVO(GroupChatHistory groupChatHistory) {
+        this.id = groupChatHistory.getId();
         this.userId = groupChatHistory.getFromId();
         this.content = groupChatHistory.getContext();
         this.time = groupChatHistory.getCreateTime();
