@@ -20,7 +20,7 @@ public class GroupChatGetDTO {
      * 群聊id
      */
     @NotNull(message = "群聊id不能为空")
-    private Long groupId;
+    private Integer groupId;
 
     /**
      * 最早的消息id，如果从最后开始获取则设为null

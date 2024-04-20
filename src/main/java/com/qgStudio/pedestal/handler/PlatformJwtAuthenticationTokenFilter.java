@@ -1,6 +1,7 @@
 package com.qgStudio.pedestal.handler;
 
 import com.alibaba.fastjson2.JSON;
+import com.qgStudio.pedestal.constant.Constants;
 import com.qgStudio.pedestal.constant.RedisConstants;
 import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
 import com.qgStudio.pedestal.entity.vo.Result;
@@ -54,7 +55,7 @@ public class PlatformJwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
         try {
 
-            String token = httpServletRequest.getHeader("Authorization");
+            String token = httpServletRequest.getHeader(Constants.AUTHORIZATION);
             Claims claims = JwtUtils.parseJWT(token);
             String id = claims.get("id").toString();
             UserDetailsImpl userDetails = JSON.parseObject(redisCache.getCacheObject(RedisConstants.USER_LOGIN + id), UserDetailsImpl.class);

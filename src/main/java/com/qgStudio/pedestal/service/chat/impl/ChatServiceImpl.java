@@ -1,5 +1,6 @@
 package com.qgStudio.pedestal.service.chat.impl;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -7,6 +8,8 @@ import com.qgStudio.pedestal.entity.dto.chat.GroupChatSendDTO;
 import com.qgStudio.pedestal.entity.dto.chat.PrivateChatGetDTO;
 import com.qgStudio.pedestal.entity.dto.chat.PrivateChatSendDTO;
 import com.qgStudio.pedestal.entity.dto.chat.GroupChatGetDTO;
+import com.qgStudio.pedestal.entity.dto.chat.ws.MessageGetDTO;
+import com.qgStudio.pedestal.entity.dto.chat.ws.MessageSendDTO;
 import com.qgStudio.pedestal.entity.po.GroupChatHistory;
 import com.qgStudio.pedestal.entity.po.PrivateChatHistory;
 import com.qgStudio.pedestal.entity.vo.chat.ChatHistoryVO;
@@ -17,6 +20,7 @@ import com.qgStudio.pedestal.mapper.PrivateChatHistoryMapper;
 import com.qgStudio.pedestal.service.chat.ChatService;
 import com.qgStudio.pedestal.service.space.SpaceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,5 +97,29 @@ public class ChatServiceImpl implements ChatService {
         GroupChatHistory groupChatHistory = new GroupChatHistory(userId, groupId, spaceInviteVO);
         groupChatHistoryMapper.insert(groupChatHistory);
         return true;
+    }
+
+    @Override
+    public List<ChatHistoryVO> getMessage(MessageGetDTO messageGetDTO, Integer userId) {
+        if (messageGetDTO.getType().equals(MessageGetDTO.MessageType.PRIVATE.getType())){
+            return getPrivateChatHistory(userId, new PrivateChatGetDTO( messageGetDTO.getTargetId(), messageGetDTO.getLastId()));
+        }else {
+            return getPublicChatHistory(userId, new GroupChatGetDTO(messageGetDTO.getTargetId(), messageGetDTO.getLastId()));
+        }
+    }
+
+    @Override
+    public Boolean sendMessage(MessageSendDTO messageSendDTO, Integer userId) {
+        ChatService chatService = SpringUtil.getBean(ChatService.class);
+        if (messageSendDTO.getType().equals(MessageSendDTO.MessageSendType.PRIVATE_TEXT.getType())) {
+            return chatService.sendPrivateChat(new PrivateChatSendDTO(messageSendDTO.getToId(), messageSendDTO.getContext()), userId);
+        }else if (messageSendDTO.getType().equals(MessageSendDTO.MessageSendType.GROUP_TEXT.getType())) {
+            return chatService.sendGroupChat(new GroupChatSendDTO(messageSendDTO.getToId(), messageSendDTO.getContext()), userId);
+        } else if (messageSendDTO.getType().equals(MessageSendDTO.MessageSendType.PRIVATE_SPACE.getType())) {
+            return chatService.createSpaceInPrivate(messageSendDTO.getToId(), userId);
+        } else if (messageSendDTO.getType().equals(MessageSendDTO.MessageSendType.GROUP_SPACE.getType())) {
+            return chatService.createSpaceInGroup(messageSendDTO.getToId(), userId);
+        }
+        return null;
     }
 }

@@ -11,4 +11,8 @@ public class Constants {
     public static final String GEN_BASE_NUM_CHAR = "0123456789";
 
     public static final Integer VALIDITY_TIME = 7;
+
+    public static final String AUTHORIZATION = "Authorization";
+
+    public static String USER_ID = "userId";
 }

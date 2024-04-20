@@ -54,7 +54,9 @@ public class FocusController {
     @PostMapping("/addTemplate")
     @ApiOperation("添加专注模板")
     public Result addTemplate(@RequestBody @Validated @ApiParam("添加模板对象") AddFocusOnTemplateDTO addFocusOnTemplateDTO) {
-        return focusOnTemplateService.addTemplate(addFocusOnTemplateDTO);
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer id = userDetails.getUser().getId();
+        return focusOnTemplateService.addTemplate(id,addFocusOnTemplateDTO);
     }
 
     /**

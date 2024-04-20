@@ -8,11 +8,14 @@ import com.qgStudio.pedestal.entity.po.FocusOnEvent;
 import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
 import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.ResultStatusEnum;
+import com.qgStudio.pedestal.event.TemplateEvent;
 import com.qgStudio.pedestal.mapper.FocusOnEventMapper;
 import com.qgStudio.pedestal.mapper.FocusOnTemplateMapper;
 import com.qgStudio.pedestal.mapper.UserMapper;
 import com.qgStudio.pedestal.service.IFocusOnEventService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,18 +34,14 @@ import java.util.stream.Collectors;
  * @since 2024-03-16
  */
 @Service
+@RequiredArgsConstructor
 public class FocusOnEventServiceImpl extends ServiceImpl<FocusOnEventMapper, FocusOnEvent> implements IFocusOnEventService {
 
     private final FocusOnEventMapper focusOnEventMapper;
     private final FocusOnTemplateMapper focusOnTemplateMapper;
     private final UserMapper userMapper;
+    private final ApplicationContext applicationContext;
 
-    @Autowired
-    public FocusOnEventServiceImpl(FocusOnEventMapper focusOnEventMapper, FocusOnTemplateMapper focusOnTemplateMapper, UserMapper userMapper) {
-        this.focusOnEventMapper = focusOnEventMapper;
-        this.focusOnTemplateMapper = focusOnTemplateMapper;
-        this.userMapper = userMapper;
-    }
 
     @Override
     @Transactional
@@ -52,6 +51,7 @@ public class FocusOnEventServiceImpl extends ServiceImpl<FocusOnEventMapper, Foc
             userMapper.increaseFocusTime(userId, addFocusOnEventDTO.getFocusTime());
             FocusOnEvent focusOnEvent = new FocusOnEvent(addFocusOnEventDTO);
             focusOnEventMapper.insert(focusOnEvent);
+            applicationContext.publishEvent(new TemplateEvent(this, userId));
             return Result.success();
         }
         return Result.fail(ResultStatusEnum.NOT_AUTHORIZATION);

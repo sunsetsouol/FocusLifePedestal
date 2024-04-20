@@ -20,4 +20,10 @@ public interface SpaceMapper extends BaseMapper<Space> {
 
     @Update("update space set deleted = null ,deleted_time = #{now} where id = #{spaceId} and owner_user_id = #{userId}")
     void logicDelete(Integer spaceId, Integer userId, LocalDateTime now);
+
+    @Update("update space set member_number = member_number + 1 where id = #{spaceId} and deleted is not null")
+    void increase(Long spaceId);
+
+    @Update("update space set member_number = member_number - 1 where id = #{spaceId} and deleted is not null")
+    void decrease(Integer spaceId);
 }

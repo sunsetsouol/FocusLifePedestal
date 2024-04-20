@@ -4,6 +4,8 @@ import com.qgStudio.pedestal.entity.dto.chat.GroupChatSendDTO;
 import com.qgStudio.pedestal.entity.dto.chat.PrivateChatGetDTO;
 import com.qgStudio.pedestal.entity.dto.chat.PrivateChatSendDTO;
 import com.qgStudio.pedestal.entity.dto.chat.GroupChatGetDTO;
+import com.qgStudio.pedestal.entity.dto.chat.ws.MessageGetDTO;
+import com.qgStudio.pedestal.entity.dto.chat.ws.MessageSendDTO;
 import com.qgStudio.pedestal.entity.vo.chat.ChatHistoryVO;
 
 import java.util.List;
@@ -25,4 +27,8 @@ public interface ChatService {
     Boolean sendGroupChat(GroupChatSendDTO groupChatSendDTO, Integer userId);
 
     Boolean createSpaceInGroup(Integer groupId, Integer userId);
+
+    List<ChatHistoryVO> getMessage(MessageGetDTO messageGetDTO, Integer userId);
+
+    Boolean sendMessage(MessageSendDTO messageSendDTO, Integer userId);
 }

@@ -21,10 +21,11 @@ public interface IFocusOnTemplateService extends IService<FocusOnTemplate> {
 
     /**
      * 添加专注模板
+     * @param userId 用户id
      * @param focusOnTemplate 专注模板
      * @return 结果
      */
-    Result addTemplate(AddFocusOnTemplateDTO focusOnTemplate);
+    Result addTemplate(Integer userId, AddFocusOnTemplateDTO focusOnTemplate);
 
     Result deleteTemplate(IntegerDTO templateId);
 

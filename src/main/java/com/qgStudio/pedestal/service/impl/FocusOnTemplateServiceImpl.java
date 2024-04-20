@@ -13,14 +13,18 @@ import com.qgStudio.pedestal.entity.po.UserPedestalMap;
 import com.qgStudio.pedestal.entity.dto.IntegerDTO;
 import com.qgStudio.pedestal.entity.vo.Result;
 import com.qgStudio.pedestal.entity.vo.ResultStatusEnum;
+import com.qgStudio.pedestal.event.TemplateEvent;
 import com.qgStudio.pedestal.mapper.FocusOnTemplateMapper;
 import com.qgStudio.pedestal.mapper.PedestalMapper;
 import com.qgStudio.pedestal.mapper.UserPedestalMapMapper;
 import com.qgStudio.pedestal.mqtt.MqttConfiguration;
 import com.qgStudio.pedestal.service.IFocusOnTemplateService;
+import lombok.RequiredArgsConstructor;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -37,6 +41,7 @@ import java.util.stream.Collectors;
  * @since 2024-03-16
  */
 @Service
+@RequiredArgsConstructor
 public class FocusOnTemplateServiceImpl extends ServiceImpl<FocusOnTemplateMapper, FocusOnTemplate> implements IFocusOnTemplateService {
     private final StringRedisTemplate stringRedisTemplate;
     private final FocusOnTemplateMapper focusOnTemplateMapper;
@@ -44,41 +49,21 @@ public class FocusOnTemplateServiceImpl extends ServiceImpl<FocusOnTemplateMappe
     private final MqttConfiguration mqttConfiguration;
     private final UserPedestalMapMapper userPedestalMapMapper;
     private final PedestalMapper pedestalMapper;
+    private final ApplicationContext applicationContext;
 
-    @Autowired
-    public FocusOnTemplateServiceImpl(StringRedisTemplate stringRedisTemplate, FocusOnTemplateMapper focusOnTemplateMapper, MqttClient mqttClient, MqttConfiguration mqttConfiguration, UserPedestalMapMapper userPedestalMapMapper, PedestalMapper pedestalMapper) {
-        this.stringRedisTemplate = stringRedisTemplate;
-        this.focusOnTemplateMapper = focusOnTemplateMapper;
-        this.mqttClient = mqttClient;
-        this.mqttConfiguration = mqttConfiguration;
-        this.userPedestalMapMapper = userPedestalMapMapper;
-        this.pedestalMapper = pedestalMapper;
-    }
 
 
     @Override
-    public Result addTemplate(AddFocusOnTemplateDTO focusOnTemplateDTO) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Integer userId = userDetails.getUser().getId();
+    public Result addTemplate(Integer userId, AddFocusOnTemplateDTO focusOnTemplateDTO) {
+
         FocusOnTemplate focusOnTemplate = new FocusOnTemplate(focusOnTemplateDTO);
         focusOnTemplate.setUserId(userId);
 
         if (save(focusOnTemplate)) {
-            stringRedisTemplate.opsForZSet().add(RedisConstants.USER_FOCUS_TEMPLATE + userId, String.valueOf(focusOnTemplate.getId()), Integer.valueOf(focusOnTemplate.getFocusStartTime().replace(":", "")));
+            stringRedisTemplate.opsForZSet().add(RedisConstants.USER_FOCUS_TEMPLATE + userId, String.valueOf(focusOnTemplate.getId()), focusOnTemplate.getId());
         }
-        Result<List<FocusOnTemplate>> templates = getTemplates(userId);
-        byte[] jsonBytes = JSON.toJSONBytes(templates);
-        List<UserPedestalMap> userPedestalMaps = userPedestalMapMapper.selectList(
-                new LambdaQueryWrapper<UserPedestalMap>()
-                        .eq(UserPedestalMap::getUserId, userId));
-        List<Pedestal> pedestals = pedestalMapper.selectBatchIds(userPedestalMaps.stream().map(UserPedestalMap::getPedestalId).collect(Collectors.toList()));
-        pedestals.stream().forEach(pedestal -> {
-            try {
-                mqttClient.publish(mqttConfiguration.getSendTemplateTopic() + pedestal.getEquipment(), jsonBytes, 2, true);
-            } catch (MqttException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        applicationContext.publishEvent(new TemplateEvent(this, userId));
+
         return Result.success();
     }
 
@@ -89,6 +74,7 @@ public class FocusOnTemplateServiceImpl extends ServiceImpl<FocusOnTemplateMappe
 
         if (focusOnTemplateMapper.logicDelete(templateId.getNumber(), userId) == 1) {
             stringRedisTemplate.opsForZSet().remove(RedisConstants.USER_FOCUS_TEMPLATE + userId, String.valueOf(templateId.getNumber()));
+            applicationContext.publishEvent(new TemplateEvent(this, userId));
             return Result.success();
         }
         return Result.fail(ResultStatusEnum.TEMPLATE_NOT_EXIST);
@@ -111,8 +97,29 @@ public class FocusOnTemplateServiceImpl extends ServiceImpl<FocusOnTemplateMappe
                 .eq(FocusOnTemplate::getUserId, userId);
         FocusOnTemplate focusOnTemplate = new FocusOnTemplate(updateFocusOnTemplateDTO);
         if (focusOnTemplateMapper.update(focusOnTemplate, focusOnTemplateLambdaQueryWrapper) == 1) {
+            applicationContext.publishEvent(new TemplateEvent(this, userId));
             return Result.success();
         }
         return Result.fail(ResultStatusEnum.TEMPLATE_NOT_EXIST);
+    }
+
+    @EventListener
+    public void templateEvent(TemplateEvent templateEvent) {
+        Integer userId = templateEvent.getUserId();
+        Result<List<FocusOnTemplate>> templates = getTemplates(userId);
+        byte[] jsonBytes = JSON.toJSONBytes(templates);
+        List<UserPedestalMap> userPedestalMaps = userPedestalMapMapper.selectList(
+                new LambdaQueryWrapper<UserPedestalMap>()
+                        .eq(UserPedestalMap::getUserId, userId));
+        if (!userPedestalMaps.isEmpty()) {
+            List<Pedestal> pedestals = pedestalMapper.selectBatchIds(userPedestalMaps.stream().map(UserPedestalMap::getPedestalId).collect(Collectors.toList()));
+            pedestals.stream().forEach(pedestal -> {
+                try {
+                    mqttClient.publish(mqttConfiguration.getSendTemplateTopic() + pedestal.getEquipment(), jsonBytes, 2, true);
+                } catch (MqttException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
     }
 }

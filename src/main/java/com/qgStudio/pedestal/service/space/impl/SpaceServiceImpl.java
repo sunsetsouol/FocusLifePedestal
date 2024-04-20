@@ -38,6 +38,7 @@ public class SpaceServiceImpl implements SpaceService {
     private final UserSpaceMapper userSpaceMapper;
     private final SpaceInviteMapper spaceInviteMapper;
     private final UserMapper userMapper;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public SpaceVO createSpace(Integer userId, SpaceCreateDTO spaceCreateDTO) {
@@ -63,7 +64,7 @@ public class SpaceServiceImpl implements SpaceService {
 
     @Override
     public Result<Boolean> deleteSpace(Integer userId, Integer spaceId) {
-        if (spaceMapper.delete(new LambdaQueryWrapper<Space>().eq(Space::getId, spaceId).eq(Space::getOwnerUserId, userId))==1) {
+        if (spaceMapper.delete(new LambdaQueryWrapper<Space>().eq(Space::getId, spaceId).eq(Space::getOwnerUserId, userId)) == 1) {
             userSpaceMapper.delete(new LambdaQueryWrapper<UserSpace>().eq(UserSpace::getSpaceId, spaceId));
             return Result.success(ResultStatusEnum.SUCCESS);
         }
@@ -71,7 +72,7 @@ public class SpaceServiceImpl implements SpaceService {
     }
 
 
-//    @Override
+    //    @Override
 //    public Result<List<SpaceVO>> getSpace(Integer userId) {
 //        return Result.success(ResultStatusEnum.SUCCESS, spaceMapper.selectList(new LambdaQueryWrapper<Space>().eq(Space::getOwnerUserId, userId)).stream().map(SpaceVO::new).collect(Collectors.toList()));
 //    }
@@ -87,13 +88,16 @@ public class SpaceServiceImpl implements SpaceService {
         if (Objects.isNull(space)) {
             throw new ServiceException(ResultStatusEnum.SPACE_NOT_EXIT);
         }
-        if (space.getOwnerUserId().equals(userId)) {
+        if (space.getOwnerUserId().equals(userId) && space.getMemberNumber() > 1) {
             throw new ServiceException(ResultStatusEnum.OWNER_CANNOT_QUIT);
         }
-        if (userSpaceMapper.delete(new LambdaQueryWrapper<UserSpace>().eq(UserSpace::getUserId, userId).eq(UserSpace::getSpaceId, spaceId))==1) {
-            return Result.success(ResultStatusEnum.SUCCESS);
+        userSpaceMapper.delete(new LambdaQueryWrapper<UserSpace>().eq(UserSpace::getUserId, userId).eq(UserSpace::getSpaceId, spaceId));
+        userSpaceMapper.delete(new LambdaQueryWrapper<UserSpace>().eq(UserSpace::getSpaceId, spaceId));
+        spaceMapper.decrease(spaceId);
+        if (space.getOwnerUserId().equals(userId)) {
+            spaceMapper.delete(new LambdaQueryWrapper<Space>().eq(Space::getId, spaceId));
         }
-        throw new ServiceException(ResultStatusEnum.RE_QUIT_SPACE);
+        return Result.success(ResultStatusEnum.SUCCESS);
     }
 
     @Override
@@ -106,14 +110,15 @@ public class SpaceServiceImpl implements SpaceService {
         if (Objects.isNull(user)) {
             throw new ServiceException(ResultStatusEnum.USER_NOT_EXIST);
         }
-        if (userSpaceMapper.selectCount(new LambdaQueryWrapper<UserSpace>().eq(UserSpace::getUserId, userId).eq(UserSpace::getSpaceId, spaceId))==0) {
+        if (userSpaceMapper.selectCount(new LambdaQueryWrapper<UserSpace>().eq(UserSpace::getUserId, userId).eq(UserSpace::getSpaceId, spaceId)) == 0) {
             throw new ServiceException(ResultStatusEnum.NOT_AUTHORIZATION);
         }
         SpaceInvite spaceInvite = new SpaceInvite();
         spaceInvite.setSpaceId(spaceId);
         spaceInvite.setInviterId(userId);
+        spaceInvite.setValidatyTime(LocalDateTime.now().plusDays(7));
         spaceInviteMapper.insert(spaceInvite);
-        return new SpaceInviteVO(spaceInvite.getId(),user, space);
+        return new SpaceInviteVO(spaceInvite.getId(), user, space);
     }
 
     @Override
@@ -125,11 +130,12 @@ public class SpaceServiceImpl implements SpaceService {
         if (Objects.isNull(spaceInvite)) {
             throw new ServiceException(ResultStatusEnum.INVITE_NOT_EXIT);
         }
-        if (spaceInvite.getValidatyTime().isBefore(LocalDateTime.now())){
+        if (spaceInvite.getValidatyTime().isBefore(LocalDateTime.now())) {
             throw new ServiceException(ResultStatusEnum.OVERDUE);
         }
         UserSpace userSpace = new UserSpace(userId, spaceInvite.getSpaceId());
         userSpaceMapper.insert(userSpace);
+        spaceMapper.increase(spaceInvite.getSpaceId());
         return Result.success();
     }
 
@@ -143,14 +149,14 @@ public class SpaceServiceImpl implements SpaceService {
             throw new ServiceException(ResultStatusEnum.NOT_AUTHORIZATION);
         }
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUid, spaceRemoveMemberDTO.getUserUid()));
-        if (userSpaceMapper.delete(new LambdaQueryWrapper<UserSpace>().eq(UserSpace::getUserId, user.getId()).eq(UserSpace::getSpaceId, spaceRemoveMemberDTO.getSpaceId()))==1) {
+        if (userSpaceMapper.delete(new LambdaQueryWrapper<UserSpace>().eq(UserSpace::getUserId, user.getId()).eq(UserSpace::getSpaceId, spaceRemoveMemberDTO.getSpaceId())) == 1) {
             return Result.success();
         }
         throw new ServiceException(ResultStatusEnum.USER_NOT_IN_SPACE);
     }
 
     private void validateNotSpace(Integer userId) {
-        if (userSpaceMapper.selectCount(new LambdaQueryWrapper<UserSpace>().eq(UserSpace::getUserId, userId))!=0) {
+        if (userSpaceMapper.selectCount(new LambdaQueryWrapper<UserSpace>().eq(UserSpace::getUserId, userId)) != 0) {
             throw new ServiceException(ResultStatusEnum.ALREADY_IN_SPACE);
         }
     }

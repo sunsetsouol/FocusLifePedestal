@@ -14,9 +14,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://39.98.41.126:3306/pedestal?useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://39.98.41.126:3306/pedestal?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8
     username: ${MYSQL_USERNAME}
-    password: ${MYSQL_QG_PASSWORD}
+    password: ${MYSQL_QGPASSWORD}
   redis:
     host: 39.98.41.126
     port: 6379
@@ -57,7 +57,7 @@ mqtt:
   username: test
   password: test
   qos: 2
-  clientId: mqasaaaaasdsdasdasdasdasaa #ClientId_local必须唯一 比如你已经定了叫ABC  那你就一直叫ABC  其他地方就不要使用ABC了
+  clientId: mqasaaaaaaasdasdasdasaa #ClientId_local必须唯一 比如你已经定了叫ABC  那你就一直叫ABC  其他地方就不要使用ABC了
   timeout: 10
   keepalive: 20
   focusEventTopic: /Focus_Life/focusEvent           #任务完成后发送的topic

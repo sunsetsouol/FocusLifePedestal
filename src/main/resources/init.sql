@@ -31,12 +31,12 @@ use
 DROP TABLE IF EXISTS `focus_group`;
 CREATE TABLE `focus_group`
 (
-    `id`            int(11)                                                        NOT NULL,
+    `id`            int(11)                                                        NOT NULL AUTO_INCREMENT,
     `name`          varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NOT NULL COMMENT '群组名',
     `head_image`    varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'https://gitee.com/sunsetsouol/pic/raw/pic/picture/202404141831439.png' COMMENT '头像',
     `owner_user_id` int(11)                                                        NOT NULL COMMENT '群主userId',
     `description`   varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NULL     DEFAULT NULL COMMENT '群组描述',
-    `member_number` int(11)                                                        NOT NULL COMMENT '成员人数',
+    `member_number` int(11)                                                        NOT NULL default 1 COMMENT '成员人数',
     `version`       int(11)                                                        NOT NULL DEFAULT 0 COMMENT '乐观锁',
     `deleted`       int(11)                                                        NULL     DEFAULT 0 COMMENT '逻辑删除',
     PRIMARY KEY (`id`) USING BTREE
@@ -48,7 +48,6 @@ CREATE TABLE `focus_group`
 -- ----------------------------
 -- Table structure for focus_group_invite
 -- ----------------------------
-DROP TABLE IF EXISTS `focus_group_invite`;
 
 -- ----------------------------
 -- Table structure for focus_on_event
@@ -163,7 +162,7 @@ CREATE TABLE `space_invite`
     `space_id`      int(11)    NOT NULL COMMENT '空间id',
     `to_user_id`    int(11)    NULL     DEFAULT NULL COMMENT '受邀请用户id',
     `create_time`   datetime   NOT NULL default CURRENT_TIMESTAMP COMMENT '邀请时间',
-    `validaty_time` datetime   NOT NULL DEFAULT CURRENT_TIMESTAMP on update current_timestamp COMMENT '有效期',
+    `validaty_time` datetime   NOT NULL  COMMENT '有效期',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
   CHARACTER SET = utf8mb4
