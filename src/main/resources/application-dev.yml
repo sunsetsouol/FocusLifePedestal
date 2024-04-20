@@ -16,7 +16,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://39.98.41.126:3306/pedestal?useSSL=false&allowPublicKeyRetrieval=true
     username: ${MYSQL_USERNAME}
-    password: ${MYSQL_QGPASSWORD}
+    password: ${MYSQL_QG_PASSWORD}
   redis:
     host: 39.98.41.126
     port: 6379

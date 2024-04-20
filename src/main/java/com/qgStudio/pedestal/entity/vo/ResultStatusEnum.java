@@ -26,7 +26,7 @@ public enum ResultStatusEnum {
     BUSY(400, "服务器繁忙"),
     NOT_AUTHORIZATION(401, "没有权限"),
     EMAIL_EXISTED(402, "邮箱已注册"),
-    LOGIN_FAIL(403, "登录失败"),
+    LOGIN_FAIL(403, "账号密码错误"),
     TEMPLATE_NOT_EXIST(404, "任务不存在"),
     UNKNOWN_ERROR(500, "服务器异常"),
     PARAMS_ERROR(405, "参数错误"),

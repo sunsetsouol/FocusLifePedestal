@@ -5,6 +5,7 @@ import com.qgStudio.pedestal.entity.vo.ResultStatusEnum;
 import com.qgStudio.pedestal.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -62,6 +63,12 @@ public class GlobalExceptionHandler {
     public Result<String> handleServiceException(ServiceException e, HttpServletRequest request) {
         log.info("请求地址{}, 异常{}", request.getRequestURI(), e.getMessage());
         return Result.fail(e.getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    public Result<String> handleInternalAuthenticationServiceException(InternalAuthenticationServiceException e, HttpServletRequest request) {
+        log.info("请求地址{}, 异常{}", request.getRequestURI(), e.getMessage());
+        return Result.fail(ResultStatusEnum.LOGIN_FAIL);
     }
 
 }
