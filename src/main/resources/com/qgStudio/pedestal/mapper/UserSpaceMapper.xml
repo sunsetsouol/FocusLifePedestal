@@ -6,7 +6,7 @@
         INSERT INTO user_space (user_id, space_id)
         VALUES
         <foreach collection="userSpaces" item="userSpace" separator=",">
-            (#{userSpace.userId}, #{userSpace.spaceId})
+            (#{userSpace.fromId}, #{userSpace.spaceId})
         </foreach>
     </insert>
 </mapper>

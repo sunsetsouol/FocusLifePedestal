@@ -5,14 +5,41 @@
 topic：
 /Focus_Life/focusEvent
 发送数据示例
+
 {"data":{
-    "focusId": 8,
-    "realStartTime": "2024-01-19T10:00:00",
-    "focusTime": "630",
-    "suspendTime": 3,
-    "isCompleted": 1,
-    "note": "string"
+    "templateId": 8,
+    "type":1
 },"equipmentNumber":"123456"}
+
+{"data":{
+    "templateId": 8,
+    "type":2
+},"equipmentNumber":"123456"}
+
+{"data":{
+    "templateId": 8,
+    "type":3
+},"equipmentNumber":"123456"}
+
+{"data":{
+    "templateId": 8,
+    "type":4
+},"equipmentNumber":"123456"}
+
+{"data":{
+    "templateId": 8,
+    "type":5
+},"equipmentNumber":"123456"}
+{"data":{
+    "templateId": 8,
+    "type":6，
+    ”focusTime“：120
+},"equipmentNumber":"123456"}
+
+说明：
+templateId是模板的id
+type： 1：开始，2：心跳，3：暂停 4：暂停后继续 5：暂停后取消专注 6：完成
+focusTime：专注时长，完成后发
 ```
 
 ```
@@ -57,3 +84,4 @@ topic：
 {"code":200,"data":{"intakeDate":"2024-03-19","intakeReal":4008,"intakeTarget":200},"message":"成功"}
 
 ```
+

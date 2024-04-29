@@ -1,6 +1,7 @@
 package com.qgStudio.pedestal.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qgStudio.pedestal.entity.bo.FocusEventBO;
 import com.qgStudio.pedestal.entity.dto.AddFocusOnEventDTO;
 import com.qgStudio.pedestal.entity.po.FocusOnEvent;
 import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
@@ -31,4 +32,6 @@ public interface IFocusOnEventService extends IService<FocusOnEvent> {
     Result<List<FocusOnTemplate>> getYearFocusTimeDetails(Integer userId);
 
     Result<List<FocusOnTemplate>> getMonthFocusTimeDetails(Integer userId);
+
+    void dealPedestalFocusEvent(Integer userId, FocusEventBO focusEventBO);
 }

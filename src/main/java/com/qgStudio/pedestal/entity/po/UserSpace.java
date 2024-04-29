@@ -38,17 +38,18 @@ public class UserSpace implements Serializable {
     /**
      * 空间id
      */
-    private Integer spaceId;
+    private Long spaceId;
 
     /**
-     * 专注事件id（0表示非专注）
+     * 正在专注事件
      */
     private Integer eventId;
 
     /**
-     * 上一次专注开始时间
+     * 专注模板名字，如果空就是没有专注
      */
-    private LocalDateTime focusStartTime;
+    private String templateName;
+
 
     /**
      * 空间专注次数
@@ -79,6 +80,6 @@ public class UserSpace implements Serializable {
 
     public UserSpace(Integer userId, Long spaceId) {
         this.userId = userId;
-        this.spaceId = spaceId.intValue();
+        this.spaceId = spaceId;
      }
 }

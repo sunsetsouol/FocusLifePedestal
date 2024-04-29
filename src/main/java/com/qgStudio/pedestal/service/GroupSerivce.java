@@ -1,6 +1,10 @@
 package com.qgStudio.pedestal.service;
 
 import com.qgStudio.pedestal.entity.dto.group.GroupCreateDTO;
+import com.qgStudio.pedestal.entity.dto.group.GroupInviteDTO;
+import com.qgStudio.pedestal.entity.po.FocusGroup;
+
+import java.util.List;
 
 /**
  * @author yinjunbiao
@@ -12,5 +16,7 @@ public interface GroupSerivce {
 
     Boolean quitGroup(Integer userId, Integer groupId);
 
-    Boolean inviteGroup(Integer ownerId, Integer groupId, Integer userId);
+    Boolean inviteGroup(Integer fromId, GroupInviteDTO groupInviteDTO);
+
+    List<FocusGroup> searchGroup(Integer userId);
 }

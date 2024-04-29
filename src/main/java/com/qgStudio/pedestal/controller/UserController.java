@@ -110,5 +110,17 @@ public class UserController {
         return userService.getByUId(uid);
     }
 
+    @GetMapping("/getUid")
+    @ApiOperation("获取用户uid")
+    public Result<String> getUid() {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return Result.success(userDetails.getUser().getUid());
+    }
+
+    @GetMapping("/findByEmail/{email}")
+    @ApiOperation("通过邮箱查找用户")
+    public Result<UserVo> findByEmail(@PathVariable("email") String email) {
+        return userService.getByEmail(email);
+    }
 
 }

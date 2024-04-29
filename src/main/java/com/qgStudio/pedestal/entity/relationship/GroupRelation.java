@@ -1,9 +1,8 @@
 package com.qgStudio.pedestal.entity.relationship;
 
-import org.neo4j.ogm.annotation.GeneratedValue;
-import org.neo4j.ogm.annotation.Id;
-import org.neo4j.ogm.annotation.Property;
-import org.neo4j.ogm.annotation.RelationshipEntity;
+import com.qgStudio.pedestal.entity.node.GroupNode;
+import com.qgStudio.pedestal.entity.node.UserNode;
+import org.neo4j.ogm.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +17,12 @@ public class GroupRelation {
     @GeneratedValue
     private Long id;
 
-    @Property("JoinTime")
-    private LocalDateTime joinTime;
+    @Property("CreateTime")
+    private Long joinTime;
+
+    @StartNode
+    private UserNode userNode;
+
+    @EndNode
+    private GroupNode groupNode;
 }

@@ -1,6 +1,7 @@
 package com.qgStudio.pedestal.conf;
 
 import com.qgStudio.pedestal.handler.websocket.ChatWebsocketHandler;
+import com.qgStudio.pedestal.handler.websocket.SpaceWebsocketHandler;
 import com.qgStudio.pedestal.interceptor.WebSocketInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Autowired
     private ChatWebsocketHandler chatWebsocketHandler;
+    @Autowired
+    private SpaceWebsocketHandler spaceWebsocketHandler;
     @Bean
     HandshakeInterceptor websocketInterceptor() {
         return new WebSocketInterceptor();
@@ -28,6 +31,9 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
         webSocketHandlerRegistry.addHandler(chatWebsocketHandler, "/chat")
+                .addInterceptors(websocketInterceptor())
+                .setAllowedOrigins("*");
+        webSocketHandlerRegistry.addHandler(spaceWebsocketHandler, "/space")
                 .addInterceptors(websocketInterceptor())
                 .setAllowedOrigins("*");
     }

@@ -27,7 +27,8 @@ public class MessageSendDTO {
         PRIVATE_TEXT("privateText"),
         GROUP_TEXT("groupText"),
         PRIVATE_SPACE("privateSpace"),
-        GROUP_SPACE("groupSpace")
+        GROUP_SPACE("groupSpace"),
+//        GROUP_INVITE("groupInvite"),
         ;
         private final String type;
     }

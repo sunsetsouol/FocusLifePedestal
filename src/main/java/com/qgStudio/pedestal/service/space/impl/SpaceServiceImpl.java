@@ -77,7 +77,7 @@ public class SpaceServiceImpl implements SpaceService {
 //        return Result.success(ResultStatusEnum.SUCCESS, spaceMapper.selectList(new LambdaQueryWrapper<Space>().eq(Space::getOwnerUserId, userId)).stream().map(SpaceVO::new).collect(Collectors.toList()));
 //    }
     @Override
-    public Result<List<SpaceUserVO>> getSpaceMembers(Integer spaceId) {
+    public Result<List<SpaceUserVO>> getSpaceMembers(Long spaceId) {
         return Result.success(userSpaceMapper.selectSpaceUsers(spaceId));
 
     }
@@ -153,6 +153,15 @@ public class SpaceServiceImpl implements SpaceService {
             return Result.success();
         }
         throw new ServiceException(ResultStatusEnum.USER_NOT_IN_SPACE);
+    }
+
+    @Override
+    public Integer getFoucsingMembers(Integer userId) {
+        UserSpace userSpace = userSpaceMapper.selectOne(new LambdaQueryWrapper<UserSpace>().eq(UserSpace::getUserId, userId));
+        if (Objects.isNull(userSpace)) {
+            return null;
+        }
+        return userSpaceMapper.selectCount(new LambdaQueryWrapper<UserSpace>().eq(UserSpace::getSpaceId, userSpace.getSpaceId()).isNotNull(UserSpace::getEventId));
     }
 
     private void validateNotSpace(Integer userId) {

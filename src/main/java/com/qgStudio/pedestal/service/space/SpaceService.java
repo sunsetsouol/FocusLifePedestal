@@ -21,7 +21,7 @@ public interface SpaceService {
 
 //    Result<List<SpaceVO>> getSpace(Integer userId);
 
-    Result<List<SpaceUserVO>> getSpaceMembers(Integer spaceId);
+    Result<List<SpaceUserVO>> getSpaceMembers(Long spaceId);
 
     Result<Boolean> quitSpace(Integer userId, Integer spaceId);
 
@@ -30,4 +30,6 @@ public interface SpaceService {
     Result<Boolean> acceptInvite(Integer userId, Integer inviteId);
 
     Result<Boolean> removeSpace(SpaceRemoveMemberDTO spaceRemoveMemberDTO, Integer userId);
+
+    Integer getFoucsingMembers(Integer userId);
 }

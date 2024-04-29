@@ -45,4 +45,6 @@ public interface IUserService extends IService<User> {
     Result dealFriendApply(Integer userId, DealFriendApplyDTO dealFriendApplyDTO);
 
     Result<List<UserVo>> searchMyFriends(Integer userId);
+
+    Result<UserVo> getByEmail(String email);
 }

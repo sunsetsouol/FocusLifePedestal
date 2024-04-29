@@ -53,18 +53,20 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 mqtt:
-  host: tcp://broker.emqx.io:1883
-  username: test
-  password: test
+  host: tcp://39.98.41.126:1883
+  username: qgstudio
+  password: qgstudio
   qos: 2
-  clientId: mqasaaaaaaasdasdasdasaa #ClientId_local必须唯一 比如你已经定了叫ABC  那你就一直叫ABC  其他地方就不要使用ABC了
+  clientId: bridge_saawsaaaa #ClientId_local必须唯一 比如你已经定了叫ABC  那你就一直叫ABC  其他地方就不要使用ABC了
   timeout: 10
   keepalive: 20
-  focusEventTopic: /Focus_Life/focusEvent           #任务完成后发送的topic
-  addWaterTopic: /Focus_Life/addWater               #喝水一次后发送的topic
-  getFocusOnTemplate: /Focus_Life/getTemplate       #主动获取任务模板的topic
-  getWaterTopic: /Focus_Life/getWater               #主动获取今日喝水情况的topic
-  sendTemplateTopic: /Focus_Life/sendTemplate/      #接收任务模板情况的topic
-  sendWaterTopic: /Focus_Life/sendWater/            #接收今日喝水情况的topic
-  weatherTopic: /Focus_Life/weather                 #接收天气情况的topic
-  timeTopic: /Focus_Life/time                       #接收天气情况的topic
+  focusEventTopic: /Focus_Life/focusEvent               #任务完成后发送的topic
+  addWaterTopic: /Focus_Life/addWater                   #喝水一次后发送的topic
+  getFocusOnTemplate: /Focus_Life/getTemplate           #主动获取任务模板的topic
+  getWaterTopic: /Focus_Life/getWater                   #主动获取今日喝水情况的topic
+  sendTemplateTopic: /Focus_Life/sendTemplate/          #接收任务模板情况的topic
+  sendWaterTopic: /Focus_Life/sendWater/                #接收今日喝水情况的topic
+  weatherTopic: /Focus_Life/weather                     #接收天气情况的topic
+  timeTopic: /Focus_Life/time                           #接收天气情况的topic
+  getSpaceMembersTopic: /Focus_Life/getSpaceMembers     #获取空间成员的topic
+  sendSpaceMembersTopic: /Focus_Life/sendSpaceMembers/   #发送空间成员的topic

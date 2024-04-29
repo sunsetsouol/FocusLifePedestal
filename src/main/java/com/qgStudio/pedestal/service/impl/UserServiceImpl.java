@@ -152,6 +152,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (!Objects.isNull(friendRelationRepository.findByUserIds(userId, user.getId()))) {
             return Result.fail(ResultStatusEnum.ALREADY_FRIEND);
         }
+        if (userId.equals(user.getId())){
+            return Result.fail(ResultStatusEnum.ADD_SELF);
+        }
         Friendship friendship = new Friendship();
         friendship.setFromId(userId);
         friendship.setToId(user.getId());
@@ -204,5 +207,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         List<UserNode> userNodes = userNodeRepository.selectById(userId);
         List<Integer> ids = userNodes.stream().map(UserNode::getUserId).collect(Collectors.toList());
         return Result.success(ResultStatusEnum.SUCCESS, userMapper.selectList(new LambdaQueryWrapper<User>().in(User::getId, ids).select(User::getId, User::getName, User::getHeadImage, User::getUid, User::getEmail)).stream().map(UserVo::new).collect(Collectors.toList()));
+    }
+
+    @Override
+    public Result<UserVo> getByEmail(String email) {
+        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, email));
+        return Result.success(ResultStatusEnum.SUCCESS, new UserVo(user));
     }
 }

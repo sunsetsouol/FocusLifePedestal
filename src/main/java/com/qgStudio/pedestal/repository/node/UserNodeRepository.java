@@ -16,4 +16,7 @@ import java.util.List;
 public interface UserNodeRepository extends Neo4jRepository<UserNode, Long> {
     @Query("MATCH (u:UserNode {userId: {userId}})-[r:FriendRelation]->(f:UserNode) return f")
     List<UserNode> selectById(Integer userId);
+
+    @Query("MATCH (u:UserNode)-[r:GroupRelationship]->(g:GroupNode{GroupId:{groupId}}) return u.userId")
+    List<Integer> getUserIds(Integer groupId);
 }

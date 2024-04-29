@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 public class AddFocusOnEventDTO {
 
     /**
-     * foucus事件的id
+     * focus事件的id
      */
     @ApiModelProperty(value = "专注事件模板的id", required = true)
     @NotNull(message = "专注事件id不能为空")
@@ -56,13 +56,7 @@ public class AddFocusOnEventDTO {
     @Min(value = 0, message = "暂停次数必须大于等于0")
     private Integer suspendTime;
 
-    /**
-     * 是否完成
-     */
-    @ApiModelProperty(value = "是否完成（1完成，0未完成）", required = true)
-    @Range(min = 0, max = 1, message = "是否完成只能是0或1")
-    @NotNull(message = "是否完成不能为空")
-    private Integer isCompleted;
+
 
     /**
      * 备注
@@ -75,7 +69,6 @@ public class AddFocusOnEventDTO {
         this.realStartTime = focusOnEvent.getRealStartTime();
         this.focusTime = focusOnEvent.getFocusTime();
         this.suspendTime = focusOnEvent.getSuspendTime();
-        this.isCompleted = focusOnEvent.getIsCompleted();
         this.note = focusOnEvent.getNote();
     }
 }

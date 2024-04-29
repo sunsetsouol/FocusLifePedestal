@@ -68,7 +68,7 @@ public class WaterIntakeServiceImpl extends ServiceImpl<WaterIntakeMapper, Water
             // Todo:mqtt返回队列
             throw new RuntimeException(e);
         }
-//        stringRedisTemplate.opsForList().leftPush(RedisConstants.WATER_INTAKE + LocalDate.now() + ":" + waterIntakeVo.getUserId(), String.valueOf(waterIntakeVo.getWater()));
+//        stringRedisTemplate.opsForList().leftPush(RedisConstants.WATER_INTAKE + LocalDate.now() + ":" + waterIntakeVo.getFromId(), String.valueOf(waterIntakeVo.getWater()));
     }
 
     @Override

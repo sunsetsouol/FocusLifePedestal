@@ -3,6 +3,7 @@ package com.qgStudio.pedestal.controller;
 import com.qgStudio.pedestal.entity.bo.UserDetailsImpl;
 import com.qgStudio.pedestal.entity.dto.chat.*;
 import com.qgStudio.pedestal.entity.vo.Result;
+import com.qgStudio.pedestal.entity.vo.chat.ChatHistoryContextVO;
 import com.qgStudio.pedestal.entity.vo.chat.ChatHistoryVO;
 import com.qgStudio.pedestal.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class ChatController {
      * @return 信息列表
      */
     @GetMapping("/private")
-    public Result<List<ChatHistoryVO>> getChatHistory(@RequestBody @Validated PrivateChatGetDTO privateChatGetDTO) {
+    public Result<ChatHistoryVO> getChatHistory(@RequestBody @Validated PrivateChatGetDTO privateChatGetDTO) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Integer userId = userDetails.getUser().getId();
         return Result.success(chatService.getPrivateChatHistory(userId,privateChatGetDTO));
@@ -41,7 +42,7 @@ public class ChatController {
      * @return 信息列表
      */
     @GetMapping("/group")
-    public Result<List<ChatHistoryVO>> getGroupChatHistory(@RequestBody @Validated GroupChatGetDTO groupChatGetDTO) {
+    public Result<ChatHistoryVO> getGroupChatHistory(@RequestBody @Validated GroupChatGetDTO groupChatGetDTO) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Integer userId = userDetails.getUser().getId();
         return Result.success(chatService.getPublicChatHistory(userId, groupChatGetDTO));

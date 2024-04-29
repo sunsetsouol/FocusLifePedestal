@@ -49,6 +49,10 @@ public class MqttConfiguration {
     String weatherTopic;
     @Value("${mqtt.timeTopic}")
     String timeTopic;
+    @Value("${mqtt.getSpaceMembersTopic}")
+    String getSpaceMembersTopic;
+    @Value("${mqtt.sendSpaceMembersTopic}")
+    String sendSpaceMembersTopic;
 
     @Bean
     public MqttClient mqttClient() throws MqttException {

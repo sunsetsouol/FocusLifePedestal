@@ -66,7 +66,7 @@ public class SpaceController {
      * 获取空间成员
      */
     @GetMapping("/members/{spaceId}")
-    public Result<List<SpaceUserVO>> getSpaceMembers(@PathVariable("spaceId") Integer spaceId) {
+    public Result<List<SpaceUserVO>> getSpaceMembers(@PathVariable("spaceId") Long spaceId) {
         return spaceService.getSpaceMembers(spaceId);
     }
 

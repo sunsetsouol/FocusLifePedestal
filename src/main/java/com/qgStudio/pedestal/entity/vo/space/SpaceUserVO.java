@@ -55,4 +55,10 @@ public class SpaceUserVO {
      * 总专注时长
      */
     private Integer totalFocusTime;
+
+    /**
+     * 状态（0未完成，1完成，2进行中，3：暂停）
+     * {@link com.qgStudio.pedestal.entity.po.FocusOnEvent.StatusType}
+     */
+    private String status;
 }

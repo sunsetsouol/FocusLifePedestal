@@ -66,6 +66,7 @@ public class MyMQTTClient {
         client.subscribe(mqttConfiguration.addWaterTopic, 2);
         client.subscribe(mqttConfiguration.getWaterTopic, 2);
         client.subscribe(mqttConfiguration.getFocusOnTemplate, 2);
+        client.subscribe(mqttConfiguration.getSpaceMembersTopic, 2);
         log.info("MQTT connect success");//未发生异常，则连接成功
     }
 

@@ -57,10 +57,10 @@ CREATE TABLE `focus_on_event`
 (
     `id`              int(11)                                                       NOT NULL AUTO_INCREMENT,
     `focus_id`        int(11)                                                       NOT NULL COMMENT 'foucus事件的id',
-    `real_start_time` datetime                                                      NOT NULL COMMENT '真实开始时间',
-    `focus_time`      int(11)                                                       NOT NULL COMMENT '专注时间（单位：分)',
+    `real_start_time` datetime                                                      NOT NULL default CURRENT_TIMESTAMP COMMENT '真实开始时间',
+    `focus_time`      int(11)                                                       NOT NULL default 0 COMMENT '专注时间（单位：分)',
     `suspend_time`    int(11)                                                       NOT NULL DEFAULT 0 COMMENT '暂停次数',
-    `is_completed`    int(1)                                                        NOT NULL COMMENT '是否完成',
+    `is_completed`    int(1)                                                        NOT NULL default 0 COMMENT '是否完成',
     `note`            varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL     DEFAULT NULL COMMENT '备注',
     `space_id`        int(11)                                                       NULL     DEFAULT NULL COMMENT '空间id（null就不是空间内的专注）',
     PRIMARY KEY (`id`) USING BTREE
@@ -279,4 +279,14 @@ CREATE TABLE `group_chat_history`
     `create_time` datetime     NOT NULL default CURRENT_TIMESTAMP COMMENT '创建时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
+  DEFAULT CHARSET = utf8mb4;
+
+DROP TABLE IF EXISTS `group_invite`;
+CREATE TABLE `group_invite` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) NOT NULL COMMENT '群聊id',
+  `from_id` int(11) NOT NULL COMMENT '邀请者id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `expire_time` datetime NOT NULL COMMENT '失效时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4

@@ -24,13 +24,20 @@ public interface UserSpaceMapper extends BaseMapper<UserSpace> {
 
     void insertList(@Param("userSpaces") List<UserSpace> userSpaces);
 
-    @Update("update user_space set deleted = NULL, deleted_time = #{now} where space_id = #{spaceId}")
-    void logicDelete(Integer spaceId, LocalDateTime now);
+//    @Update("update user_space set deleted = NULL, deleted_time = #{now} where space_id = #{spaceId}")
+//    void logicDelete(Integer spaceId, LocalDateTime now);
 
-    @Select("select u.name as username, u.head_image as headImage, u.email as email ,u.uid as uid ,ft.mission_name as eventName, " +
-            "sp.focus_start_time as focusStartTime, sp.focus_times as focusTimes, sp.total_focus_time as totalFocusTime  " +
+    @Select("select u.name as username, u.head_image as headImage, u.email as email ,u.uid as uid ,sp.template_name as eventName, " +
+            "e.real_start_time as focusStartTime, e.is_completed as status, sp.focus_times as focusTimes, sp.total_focus_time as totalFocusTime  " +
             "from user_space as sp " +
             "left join user as u on sp.user_id=u.id " +
-            "left join focus_on_template as ft on ft.id=sp.event_id where sp.space_id = #{spaceId}")
-    List<SpaceUserVO> selectSpaceUsers(Integer spaceId);
+            "left join focus_on_event as e on e.id=sp.event_id where sp.space_id = #{spaceId} and sp.deleted is not null")
+    List<SpaceUserVO> selectSpaceUsers(Long spaceId);
+
+    @Update("update user_space set total_focus_time = total_focus_time + #{focusTime} , focus_times = focus_times + 1 , event_id = NULL ,template_name = NULL  " +
+            " where id = #{id} and deleted is not null")
+    void completeById(Integer id, Integer focusTime);
+
+    @Update("update user_space set event_id = NULL, template_name = NULL where id = #{id} and deleted is not null")
+    void cancel(Integer userId);
 }

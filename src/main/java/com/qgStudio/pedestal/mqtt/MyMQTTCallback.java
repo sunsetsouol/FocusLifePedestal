@@ -2,6 +2,7 @@ package com.qgStudio.pedestal.mqtt;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.qgStudio.pedestal.entity.bo.FocusEventBO;
 import com.qgStudio.pedestal.entity.dto.AddFocusOnEventDTO;
 import com.qgStudio.pedestal.entity.po.FocusOnTemplate;
 import com.qgStudio.pedestal.entity.po.Pedestal;
@@ -14,6 +15,7 @@ import com.qgStudio.pedestal.mapper.UserPedestalMapMapper;
 import com.qgStudio.pedestal.service.IFocusOnEventService;
 import com.qgStudio.pedestal.service.IFocusOnTemplateService;
 import com.qgStudio.pedestal.service.IWaterIntakeService;
+import com.qgStudio.pedestal.service.space.SpaceService;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -51,6 +53,8 @@ public class MyMQTTCallback implements MqttCallbackExtended {
     private PedestalMapper pedestalMapper;
     @Autowired
     private UserPedestalMapMapper userPedestalMapMapper;
+    @Autowired
+    private SpaceService spaceService;
 
 
 
@@ -92,13 +96,14 @@ public class MyMQTTCallback implements MqttCallbackExtended {
      */
     @Override
     public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-        log.info("接收消息主题 : {}，接收消息内容 : {}", topic, new String(mqttMessage.getPayload()));
-        MqttMsg mqttMsg = JSON.parseObject(mqttMessage.getPayload(), MqttMsg.class);
-        String equipmentNumber = mqttMsg.getEquipmentNumber();
-        Pedestal pedestal = pedestalMapper.selectOne(new LambdaQueryWrapper<Pedestal>().eq(Pedestal::getEquipment, equipmentNumber));
-        UserPedestalMap userPedestalMap = userPedestalMapMapper.selectOne(new LambdaQueryWrapper<UserPedestalMap>().eq(UserPedestalMap::getPedestalId, pedestal.getId()));
 
         try {
+            String payload = new String(mqttMessage.getPayload());
+            log.info("接收消息主题 : {}，接收消息内容 : {}", topic, payload);
+            MqttMsg mqttMsg = JSON.parseObject(mqttMessage.getPayload(), MqttMsg.class);
+            String equipmentNumber = mqttMsg.getEquipmentNumber();
+            Pedestal pedestal = pedestalMapper.selectOne(new LambdaQueryWrapper<Pedestal>().eq(Pedestal::getEquipment, equipmentNumber));
+            UserPedestalMap userPedestalMap = userPedestalMapMapper.selectOne(new LambdaQueryWrapper<UserPedestalMap>().eq(UserPedestalMap::getPedestalId, pedestal.getId()));
             //喝水
             if(topic.equals(mqttConfiguration.addWaterTopic)){
                 IntegerDTO integerDTO = JSON.parseObject(mqttMsg.getData(), IntegerDTO.class);
@@ -107,11 +112,13 @@ public class MyMQTTCallback implements MqttCallbackExtended {
                 mqttClient.publish(mqttConfiguration.sendWaterTopic + equipmentNumber, JSON.toJSONBytes(waterIntake), 2, true);
             } else if(topic.equals(mqttConfiguration.focusEventTopic)){
                 //专注一次
-                AddFocusOnEventDTO focusOnEvent = JSON.parseObject(mqttMsg.getData(), AddFocusOnEventDTO.class);
+//                AddFocusOnEventDTO focusOnEvent = JSON.parseObject(mqttMsg.getData(), AddFocusOnEventDTO.class);
 
-                focusOnEventService.addEvent(userPedestalMap.getUserId(), focusOnEvent);
-                Result<List<FocusOnTemplate>> templates = focusOnTemplateService.getTemplates(userPedestalMap.getUserId());
-                mqttClient.publish(mqttConfiguration.sendTemplateTopic + equipmentNumber, JSON.toJSONBytes(templates), 2, true);
+//                focusOnEventService.addEvent(userPedestalMap.getUserId(), focusOnEvent);
+//                Result<List<FocusOnTemplate>> templates = focusOnTemplateService.getTemplates(userPedestalMap.getUserId());
+//                mqttClient.publish(mqttConfiguration.sendTemplateTopic + equipmentNumber, JSON.toJSONBytes(templates), 2, true);
+                FocusEventBO focusEventBO = JSON.parseObject(mqttMsg.getData(), FocusEventBO.class);
+                focusOnEventService.dealPedestalFocusEvent(userPedestalMap.getUserId(), focusEventBO);
             } else if(topic.equals(mqttConfiguration.getFocusOnTemplate)){
                 //获取模板
                 Result<List<FocusOnTemplate>> templates = focusOnTemplateService.getTemplates(userPedestalMap.getUserId());
@@ -120,6 +127,8 @@ public class MyMQTTCallback implements MqttCallbackExtended {
                 //获取今日喝水量
                 Result<WaterIntake> waterIntake = waterIntakeService.getWaterIntake(userPedestalMap.getUserId(), LocalDate.now());
                 mqttClient.publish(mqttConfiguration.sendWaterTopic + equipmentNumber, JSON.toJSONBytes(waterIntake), 2, true);
+            } else if (topic.equals(mqttConfiguration.getSpaceMembersTopic)) {
+                mqttClient.publish(mqttConfiguration.sendSpaceMembersTopic + equipmentNumber, JSON.toJSONBytes(spaceService.getFoucsingMembers(userPedestalMap.getUserId())), 2, true);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -9,16 +9,14 @@ import java.util.List;
 /**
  * @author yinjunbiao
  * @version 1.0
- * @date 2024/4/18
+ * @date 2024/4/21
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class GroupCreateDTO {
+public class GroupInviteDTO {
 
-        private String name;
+    private Integer groupId;
 
-        private String description;
-
-//        private List<String> userUIds;
+    private List<Integer> userids;
 }

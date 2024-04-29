@@ -3,13 +3,13 @@ package com.qgStudio.pedestal.entity.po;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.qgStudio.pedestal.entity.dto.AddFocusOnEventDTO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -31,7 +31,7 @@ public class FocusOnEvent implements Serializable {
     private Integer id;
 
     /**
-     * foucus事件的id
+     * focus事件的id
      */
     private Integer focusId;
 
@@ -51,26 +51,38 @@ public class FocusOnEvent implements Serializable {
     private Integer suspendTime;
 
     /**
-     * 是否完成
+     * 是否完成（0：未完成，1：完成，2：进行中，3：暂停）
+     * {@link StatusType}
      */
-    private Integer isCompleted;
+    private String isCompleted;
 
     /**
-     * 备注
+     * 备注（没做，不用展示）
      */
     private String note;
 
     /**
      * 空间id（null就不是空间内的专注）
      */
-    private Integer spaceId;
+    private Long spaceId;
 
     public FocusOnEvent(AddFocusOnEventDTO addFocusOnEventDTO) {
         this.focusId = addFocusOnEventDTO.getFocusId();
         this.realStartTime = LocalDateTime.now();
         this.focusTime = addFocusOnEventDTO.getFocusTime();
         this.suspendTime = addFocusOnEventDTO.getSuspendTime();
-        this.isCompleted = addFocusOnEventDTO.getIsCompleted();
         this.note = addFocusOnEventDTO.getNote();
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public enum StatusType{
+        NOT_COMPLETED( "未完成"),
+        COMPLETED( "完成"),
+        IN_PROGRESS( "进行中"),
+        PAUSE("暂停");
+        ;
+        private final String status;
+
     }
 }
